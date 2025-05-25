@@ -7,40 +7,26 @@
 */
 
 defineProps({
-  bodyText: String,
-  closeBtnTop: { type: Boolean, default: false }
+    bodyText: String,
+    closeBtnTop: { type: Boolean, default: false }
 
 })
 const emit = defineEmits(['closePanel']);
 const closePanel = () => {
-  // Emit the closePanel event to the parent component
-  emit('closePanel');
+    // Emit the closePanel event to the parent component
+    emit('closePanel');
 };
 </script>
 
 <template>
-  <div class="window">
-    <div class="title">
-      <slot />
-      <button v-if="closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
+    <div class="window">
+        <div class="title">
+            <slot />
+            <button v-if="closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
+        </div>
+        <!-- <div class="body">{{ bodyText }}</div> -->
+        <div class="body" v-html="bodyText"></div>
+        <button v-if="!closeBtnTop" class="btnOK" @click="closePanel">OK</button>
     </div>
-    <!-- <div class="body">{{ bodyText }}</div> -->
-    <div class="body" v-html="bodyText"></div>
-    <button v-if="!closeBtnTop" class="btnOK" @click="closePanel">OK</button>
-  </div>
 
 </template>
-
-
-
-export default {
-
-
-props: {
-bodytext: String,
-closeBtnTop: {type:Boolean, default:false}
-},
-
-emits: ['closePanel']
-
-}

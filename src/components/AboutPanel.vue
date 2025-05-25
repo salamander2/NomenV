@@ -5,7 +5,7 @@ import SimplePanel from './SimplePanel.vue';
 // import { useRoute } from 'vue-router';
 
 const bodyText =
-  `<P>This program is written by </P>
+    `<P>This program is written by </P>
       <div class="text-emph">Michael Harwood</div>
       <div style='padding-bottom:5px;'>It is free for trial purposes,
     but you must pay the registration fee if you want to continue to use it.</div>
@@ -18,8 +18,7 @@ const aboutTitle = 'About this program';
 </script>
 
 <template>
-  THIS IS ABOUT
-  <SimplePanel :bodyText="bodyText" :closeBtnTop=false class="modal" @close-panel="$emit('closeAbout')">
-    {{ aboutTitle }}
-  </SimplePanel>
+    <SimplePanel class="modal shift-left" :bodyText="bodyText" :closeBtnTop=false @close-panel="$emit('closeAbout')">
+        {{ aboutTitle }}
+    </SimplePanel>
 </template>

@@ -2,161 +2,170 @@
 @import 'tailwindcss';
 
 #app {
-  max-width: 1280px;
-  width: 90%;
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 8rem;
-  font-weight: normal;
-  text-align: center;
-  display: grid;
-  place-items: center;
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr; */
+    max-width: 1280px;
+    width: 90%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 8rem;
+    font-weight: normal;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr; */
 }
 
 .wrapper {
-  margin: 1rem auto;
-  display: grid;
-  place-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-  gap: 1rem;
-  background-color: lightblue;
-  border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border: gray solid 2px;
+    margin: 1rem auto;
+    display: grid;
+    place-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+    background-color: lightblue;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: gray solid 2px;
 }
 
 a,
 .green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+    text-decoration: none;
+    color: hsla(160, 100%, 37%, 1);
+    transition: 0.4s;
+    padding: 3px;
 }
 
 @media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+    a:hover {
+        background-color: hsla(160, 100%, 37%, 0.2);
+    }
 }
 
 @media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+    body {
+        display: flex;
+        place-items: center;
+    }
 }
 
 /***** from my nomen page *****/
 body {
-  display: grid;
-  place-items: center;
+    display: grid;
+    place-items: center;
 }
 
 .text-green {
-  color: green;
+    color: green;
 }
 
 .text-red {
-  color: red;
+    color: red;
 }
 
 .bold {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 /* for <a> tags */
 .text-emph {
-  color: purple;
-  font-weight: bold;
-  padding: 5px 0 5px 0;
+    color: purple;
+    font-weight: bold;
+    padding: 5px 0 5px 0;
 }
 
 .window {
-  border: 2px solid gray;
-  border-radius: 5px;
-  width: 350px;
-  font-family: 'Lucida Sans', 'Lucida Grande', Arial, Geneva, Verdana, sans-serif;
-  text-align: center;
-  padding-bottom: 8px;
-  box-shadow: 8px 5px 5px #999;
+    margin: 0 auto;
+    border: 2px solid gray;
+    border-radius: 5px;
+    width: 350px;
+    font-family: 'Lucida Sans', 'Lucida Grande', Arial, Geneva, Verdana, sans-serif;
+    text-align: center;
+    padding-bottom: 8px;
+    box-shadow: 8px 5px 5px #999;
 }
 
 .window .title {
-  background-color: #79c;
-  padding: 5px 5px 10px 5px;
-  font-weight: bold;
+    background-color: #79c;
+    padding: 5px 5px 10px 5px;
+    font-weight: bold;
 }
 
 .window .body {
-  padding: 10px;
+    padding: 10px;
 }
 
 /* The thing that makes this modal is that it ovelays the whole screen, preventing clicking on anything else. */
 .modal-mask {
-  /* ::backdrop using JS.showModal() */
-  background-color: rgba(128, 128, 128, 0.5);
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
+    /* ::backdrop using JS.showModal() */
+    background-color: rgba(128, 128, 128, 0.5);
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
 }
 
 .modal {
-  background-color: white;
+    background-color: white;
 }
 
 .modaltrans-enter-active,
 .modaltrans-leave-active {
-  transition: opacity 500ms;
+    transition: opacity 500ms;
 }
 
 .modaltrans-enter-from,
 .modaltrans-leave-to {
-  opacity: 0;
+    opacity: 0;
 }
 
 .modaltrans-enter-to,
 .modal-leave-from {
-  opacity: 1;
+    opacity: 1;
 }
 
 .btnOK {
-  border: 1px solid gray;
-  padding: 2px 5px;
-  border-radius: 5px;
-  background-color: #ccc;
+    border: 1px solid gray;
+    padding: 2px 5px;
+    border-radius: 5px;
+    background-color: #ccc;
 
-  :hover {
-    background-color: #c00;
-  }
+    :hover {
+        background-color: #c00;
+    }
 }
 
 .btnX {
-  border: 1px outset white;
-  border-radius: 3px;
-  background-color: #444;
-  color: white;
-  font-weight: bold;
-  /* font-size: 110%; */
-  float: right;
-  padding: 0 4px;
+    border: 1px outset white;
+    border-radius: 3px;
+    background-color: #444;
+    color: white;
+    font-weight: bold;
+    /* font-size: 110%; */
+    float: right;
+    padding: 0 4px;
 }
 
 #dragzone {
-  /* width: 100vw; */
-  /* height: 2000px; */
-  /* background: gray; */
-  /* position: relative; */
-  background-color: #EEF;
-  height: 90vh;
-  border: 2px solid gray;
-  border-radius: 5px;
-  padding: 15px 20px;
+    /* width: 100vw; */
+    /* height: 2000px; */
+    /* background: gray; */
+    /* position: relative; */
+    background-color: #EEF;
+    height: 90vh;
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 15px 20px;
 
+}
+
+fieldset legend {
+    font-weight: bold;
+}
+
+.shift-left {
+    transform: translateX(-5%);
 }
