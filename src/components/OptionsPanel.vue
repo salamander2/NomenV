@@ -54,8 +54,29 @@ const getQuestion = computed(() => {
 })
 
 const updateState = () => {
-    appState.state = "MAIN_STREET";
-    window.alert("OPTIONSPANEL: state updated to " + appState.state);
+    let total = 0;
+    /*     const cat1 = document.querySelector('input[name="cation1"]');
+        if (cat1 && cat1.checked) {
+            total += parseInt(cat1.value, 10);
+        }
+        const cat2 = document.querySelector('input[name="cation2"]');
+        if (cat2 && cat2.checked) {
+            total += parseInt(cat2.value, 10);
+        } */
+
+    const ionicCheckboxes = document.querySelectorAll('input[name^="check"]');
+    ionicCheckboxes.forEach((checkbox) => {
+        const ck = checkbox as HTMLInputElement;
+        if (ck.checked) {
+            total += parseInt(ck.value, 10);
+        }
+    });
+
+    appState.QTypeIonic = total;
+
+    window.alert("Ionic total: " + total);
+    // appState.state = "MAIN_STREET";
+    // window.alert("OPTIONSPANEL: state updated to " + appState.state);
 }
 
 </script>
@@ -65,12 +86,13 @@ const updateState = () => {
         <div class="title">Options</div>
         <div class="body">
 
-            <div style="background-color:#FFB; padding:6px;text-align:left; margin-bottom:8px;">
+            <div style="background-color:#FFB; padding:2px;text-align:left; margin-bottom:8px;">
                 <fieldset>
                     <legend>Positive Ion Type</legend>
                     <div v-for="text in getCations" :key=text[2]>
-                        <input type="checkbox" name="cation" id={{text[0]}} value={{text[0]}}>
-                        <label class="ml-2" for={{text[0]}}>{{ text[0] }}</label>
+                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]>
+                        <!-- <input type="checkbox" name="cation" id={{text[2]}} value={{text[2]}}> -->
+                        <label class="ml-2 text-gray-800" :for="'check' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
             </div>
@@ -79,8 +101,8 @@ const updateState = () => {
                 <fieldset>
                     <legend>Negative Ion Type</legend>
                     <div v-for="text in getAnions" :key=text[2]>
-                        <input type="checkbox" name="anion" id={{text[0]}} value={{text[0]}}>
-                        <label class="ml-2" for={{text[0]}}>{{ text[0] }}</label>
+                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]>
+                        <label class="ml-2 text-gray-800" :for="'check' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
             </div>
@@ -89,8 +111,8 @@ const updateState = () => {
                 <fieldset>
                     <legend>Covalent Bonds?</legend>
                     <div v-for="text in getCovalent" :key=text[2]>
-                        <input type="checkbox" name="covalent" id={{text[0]}} value={{text[0]}}>
-                        <label class="ml-2" for={{text[0]}}>{{ text[0] }}</label>
+                        <input type="checkbox" :name="'covalent' + text[2]" :id="'covalent' + text[2]" :value=text[2]>
+                        <label class="ml-2 text-gray-800" :for="'covalent' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
             </div>
@@ -100,7 +122,7 @@ const updateState = () => {
                     <legend>Question type</legend>
                     <div v-for="label in getQuestion" :key=label>
                         <input type="radio" name="question" id={{label}} value={{label}} checked>
-                        <label class="ml-2" for={{label}}>{{ label }}</label>
+                        <label class="ml-2 text-gray-800" for={{label}}>{{ label }}</label>
                     </div>
                 </fieldset>
             </div>

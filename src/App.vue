@@ -39,8 +39,8 @@ const closePeriodic = () => {
         </header>
 
         <div style="display:flex;justify-content: space-between;">
-            <button @click="showAbout" class="btnOK">About</button>
-            <button @click="showPeriodic" class="btnOK">Periodic</button>
+            <button type="button" @click="showAbout" class="btnOK">About</button>
+            <button type="button" @click="showPeriodic" class="btnOK">Periodic</button>
         </div>
 
         <!-- put all modals to the bottom of the HTML, right before the end of BODY -->
