@@ -62,3 +62,16 @@ npm run test:e2e -- --debug
 ```sh
 npm run lint
 ```
+
+---
+
+Installing Tailwind v4
+
+```
+npm install -D tailwindcss @tailwindcss/vite
+
+npx @tailwindcss/cli   <--- why?
+
+```
+
+Add tailwind to vite.config.ts
