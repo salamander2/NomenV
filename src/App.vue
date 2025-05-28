@@ -1,12 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import MainPanel from './components/MainPanel.vue';
 import AboutPanel from './components/AboutPanel.vue';
 import PeriodicPanel from './components/PeriodicPanel.vue';
 // import { RouterLink, RouterView } from 'vue-router'
 
+import fileContent from './res/ions.dat?raw';
+
+import { useAppStateStore } from '@/stores/appState';
+import { useIonListsStore } from '@/stores/ionLists';
+
+//variables
 const isAboutVisible = ref(false);
 const isPeriodicVisible = ref(false);
+const appState = useAppStateStore();
+const ionLists = useIonListsStore();
 
 //Methods
 const showAbout = () => {
@@ -22,6 +30,29 @@ const showPeriodic = () => {
 const closePeriodic = () => {
     isPeriodicVisible.value = false;
 }
+
+//method to parse fileContent and store it in a store.
+onMounted(() => {
+    const lines = fileContent.split(/\r\n|\n/);
+    let ionType = -1;
+
+    lines.forEach((line) => {
+        line = line.trim();
+        if (line.length === 0) return;
+        if (line.charAt(0) === ';') return;
+        if (line.charAt(0) == '[' && line.charAt(line.length - 1) == ']') {
+            ionLists.lists.push(line);
+            ionType = ionLists.ionTypes.indexOf(line.toLowerCase());
+
+            console.log(ionType + " " + line);
+        } else {
+
+        }
+
+    });
+    appState.state = 'SETUP_COMPLETE';
+});
+
 </script>
 
 <template>
@@ -64,4 +95,5 @@ const closePeriodic = () => {
       </nav> -->
         </div>
     </div>
+    {{ fileContent }}
 </template>

@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { defineProps, computed } from 'vue'
 import { useAppStateStore } from '@/stores/appState';
-// import { ref } from 'vue'
+import { ref } from 'vue'
+//props
 defineProps({
 
 })
 
+//stores
 const appState = useAppStateStore();
+
+//variables
+const isCovalent = ref(false);
 
 const questionType = [
     // display questionType, system questionType, key
@@ -75,8 +80,24 @@ const updateState = () => {
     appState.QTypeIonic = total;
 
     window.alert("Ionic total: " + total);
-    // appState.state = "MAIN_STREET";
-    // window.alert("OPTIONSPANEL: state updated to " + appState.state);
+    appState.state = "OPTIONS_COMPLETE";
+}
+
+const updateCovalent = () => {
+
+    let total = 0;
+    isCovalent.value = false;
+    const covalent1 = document.getElementById('covalent128');
+    if (covalent1.checked) {
+        isCovalent.value = true;
+        total += 128;
+    }
+    const covalent2 = document.getElementById('covalent256');
+    if (covalent2.checked) {
+        isCovalent.value = true;
+        total += 256;
+    }
+
 }
 
 </script>
@@ -90,7 +111,8 @@ const updateState = () => {
                 <fieldset>
                     <legend>Positive Ion Type</legend>
                     <div v-for="text in getCations" :key=text[2]>
-                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]>
+                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]
+                            :disabled="isCovalent">
                         <!-- <input type="checkbox" name="cation" id={{text[2]}} value={{text[2]}}> -->
                         <label class="ml-2 text-gray-800" :for="'check' + text[2]">{{ text[0] }}</label>
                     </div>
@@ -101,17 +123,20 @@ const updateState = () => {
                 <fieldset>
                     <legend>Negative Ion Type</legend>
                     <div v-for="text in getAnions" :key=text[2]>
-                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]>
+                        <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]
+                            :disabled="isCovalent">
                         <label class="ml-2 text-gray-800" :for="'check' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
             </div>
 
-            <div style="background-color:#FBC; padding:6px;text-align:left; margin-bottom:8px;">
+            <div style="background-color:#FBC; padding:6px;text-align:left; margin-bottom:8px;"
+                title="Selecting covalent disables ionic options">
                 <fieldset>
                     <legend>Covalent Bonds?</legend>
                     <div v-for="text in getCovalent" :key=text[2]>
-                        <input type="checkbox" :name="'covalent' + text[2]" :id="'covalent' + text[2]" :value=text[2]>
+                        <input type="checkbox" :name="'covalent' + text[2]" :id="'covalent' + text[2]" :value=text[2]
+                            @change="updateCovalent">
                         <label class="ml-2 text-gray-800" :for="'covalent' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
