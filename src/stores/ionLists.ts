@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 /* This is a 2D array of ion data
@@ -26,23 +26,131 @@ The second level is the individual ion data.  This could be an object with key-v
 	private String chargeUsed = "";		    //this is the actual charge that has been randomly selected for multivalent ions
 	private boolean isMultivalent = false; 	// true if charge has more than 1 char
 	private boolean isPolyAtom = false;		// true if formula has more than 1 capital letter
-	
-*/
-export const useIonListsStore = defineStore('ionLists', () => {
-    const lists = ref([]);
-	
-	const ionTypes = [
-		"[cations-monovalent]",  //0
-		"[cations-multivalent]",
-		"[cations-both]",				// wont be used, just a filler
-		"[anions-simple]",
-		"[anions-polyatomic]",
-		"[anions-derivative]",
-		"[anions-hydrogen]",
-		"[anions-other]",
-		"[covalent-simple]",
-		"[covalent-complex]",	//9
-	];
 
-    return { lists, ionTypes};
+*/
+
+const Roman = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+const Greek = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa', 'nona', 'deca']
+
+// type ListsType = Array<[string, string, number, boolean, boolean]>
+export const useIonListsStore = defineStore('ionLists', () => {
+    // const lists = ref([]);
+    // const lists: Ref<ListsType> = ref({});
+    const lists = ref<Array<Array<[string, string, number, boolean, boolean]>>>([])
+
+    const ionTypes = [
+        '[cations-monovalent]', //0
+        '[cations-multivalent]',
+        '[cations-both]', // wont be used, just a filler
+        '[anions-simple]',
+        '[anions-polyatomic]',
+        '[anions-derivative]',
+        '[anions-hydrogen]',
+        '[anions-other]',
+        '[covalent-simple]',
+        '[covalent-complex]', //9
+    ]
+
+    /*
+    function $reset() {
+        lists.value = [];
+    }*/
+
+    // function $addIon(name: string, formula: string, charge: number, type: number) {
+    function $addIon(type: number, line: string) {
+        // Parse the line into name, formula, charge
+        const parts = line.split(',')
+        const name = parts[0].trim()
+        const formula = parts[1].trim()
+        let charge = 0
+        if (type != 9) {
+            // complex covalent has no charge
+            charge = parseInt(parts[2].trim())
+            if (isNaN(charge)) {
+                console.error('Invalid charge value:', parts[2].trim())
+                return
+            }
+        }
+        // Ensure the lists array has enough sub-arrays for the type
+        while (lists.value.length <= type) {
+            lists.value.push([]) // Initialize empty array for this type
+        }
+        // Validate the type
+        if (type < 0 || type >= ionTypes.length || !lists.value[type]) {
+            console.error('Invalid ion type:', type)
+            return
+        }
+        /*
+        let data = {
+            name: name,
+            formula: formula,
+            charge: charge,
+            chargeUsed: "",
+            isMultivalent: false,
+            isPolyAtom: false
+        };*/
+
+        let isMultivalent = false
+        if (charge > 9) {
+            // if charge has more than 1 char, it is multivalent
+            isMultivalent = true
+        }
+        let isPolyAtom = false
+        // Determine if formula has more than one capital letter
+        const capitalLetters = formula.match(/[A-Z]/g) // Match all uppercase letters
+        if (capitalLetters && capitalLetters.length > 1) {
+            isPolyAtom = true
+        }
+        const data = [name, formula, charge, isMultivalent, isPolyAtom] as [
+            string,
+            string,
+            number,
+            boolean,
+            boolean,
+        ]
+        lists.value[type].push(data)
+    }
+
+    //get a list of all ions of a specific type
+    function $getListByType(type: number) {
+        if (type < 0 || type >= ionTypes.length) {
+            console.error('Invalid ion type:', type)
+            return []
+        }
+        return lists.value[type] || []
+    }
+
+    function $getRandomIon(type: number) {
+        const list = $getListByType(type)
+        if (list.length === 0) {
+            return null // No ions available for this type
+        }
+        const randomIndex = Math.floor(Math.random() * list.length)
+
+        //We will return an array with the following data:
+        // name, formula, a random charge (if is multivalent), isMultiValent, isPolyAtomic, greek, roman, (the last two are empty strings if monovalent)
+        const ion = list[randomIndex]
+        let charge = ion[2]
+        const isMultivalent = ion[3] // boolean
+        if (isMultivalent) {
+            // If the ion is multivalent, randomly select a charge from the available charges
+            const charges = '' + charge
+            const randIndex = Math.floor(Math.random() * charges.length)
+            charge = parseInt(charges[randIndex])
+        }
+        const greek = Greek[charge]
+        const roman = Roman[charge]
+
+        return [
+            ion[0], // name
+            ion[1], // formula
+            charge,
+            ion[3], // isMultivalent
+            ion[4], // isPolyAtom
+            isMultivalent ? greek : '', // greek prefix
+            isMultivalent ? roman : '', // roman numeral
+        ]
+    }
+
+    return { lists, ionTypes, $addIon, $getRandomIon, $getListByType }
 })

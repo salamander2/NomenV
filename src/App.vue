@@ -19,17 +19,17 @@ const ionLists = useIonListsStore();
 //Methods
 const showAbout = () => {
     isAboutVisible.value = true;
-}
+};
 const hideAbout = () => {
     isAboutVisible.value = false;
-}
+};
 const showPeriodic = () => {
     // isPeriodicVisible.value = true;
     isPeriodicVisible.value = !isPeriodicVisible.value;
-}
+};
 const closePeriodic = () => {
     isPeriodicVisible.value = false;
-}
+};
 
 //method to parse fileContent and store it in a store.
 onMounted(() => {
@@ -41,15 +41,20 @@ onMounted(() => {
         if (line.length === 0) return;
         if (line.charAt(0) === ';') return;
         if (line.charAt(0) == '[' && line.charAt(line.length - 1) == ']') {
-            ionLists.lists.push(line);
             ionType = ionLists.ionTypes.indexOf(line.toLowerCase());
-
-            console.log(ionType + " " + line);
+            // console.log(ionType + " " + line);
         } else {
-
+            // console.log(ionType + " " + line);
+            ionLists.$addIon(ionType, line);
         }
-
     });
+
+    // for (let i = 0; i < 100; i++) {
+    //     let ion = ionLists.$getRandomIon(1);
+    //     if (ion[0] == 'manganese') console.log(JSON.stringify(ion));
+    // }
+    // console.log(JSON.stringify(ionLists.$getListByType(0)));
+
     appState.state = 'SETUP_COMPLETE';
 });
 
