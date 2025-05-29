@@ -2,22 +2,21 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 /* This is a 2D array of ion data
-The top level are the types of ions loaded (0-9)
+The top level are the types of ions loaded (0-8)
 
     public static final int UNKNOWN = -1;
 
 	public static final int CATION_SINGLE = 0;
 	public static final int CATION_MULTI = 1;
-	//public static final int CATION_BOTH = 2;
 
-	public static final int ANION_SIMPLE = 3;
-	public static final int ANION_OXYACID = 4;
-	public static final int ANION_DERIVATIVE = 5;
-	public static final int ANION_HYDROGEN = 6;
-	public static final int ANION_OTHER = 7;
+	public static final int ANION_SIMPLE = 2;
+	public static final int ANION_OXYACID = 3;
+	public static final int ANION_DERIVATIVE = 4;
+	public static final int ANION_HYDROGEN = 5;
+	public static final int ANION_OTHER = 6;
 
-	public static final int COVALENT_SIMPLE = 8;
-	public static final int COVALENT_COMPLEX = 9;
+	public static final int COVALENT_SIMPLE = 7;
+	public static final int COVALENT_COMPLEX = 8;
 
 The second level is the individual ion data.  This could be an object with key-value pairs instead.
     private String name;
@@ -41,14 +40,13 @@ export const useIonListsStore = defineStore('ionLists', () => {
     const ionTypes = [
         '[cations-monovalent]', //0
         '[cations-multivalent]',
-        '[cations-both]', // wont be used, just a filler
         '[anions-simple]',
         '[anions-polyatomic]',
         '[anions-derivative]',
         '[anions-hydrogen]',
-        '[anions-other]',
-        '[covalent-simple]',
-        '[covalent-complex]', //9
+        '[anions-other]', //6
+        '[covalent-simple]', //7
+        '[covalent-complex]', //8
     ]
 
     /*
@@ -63,7 +61,8 @@ export const useIonListsStore = defineStore('ionLists', () => {
         const name = parts[0].trim()
         const formula = parts[1].trim()
         let charge = 0
-        if (type != 9) {
+        if (type != ionTypes.length - 1) {
+            //was != 8
             // complex covalent has no charge
             charge = parseInt(parts[2].trim())
             if (isNaN(charge)) {

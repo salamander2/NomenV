@@ -53,7 +53,7 @@ onMounted(() => {
     //     let ion = ionLists.$getRandomIon(1);
     //     if (ion[0] == 'manganese') console.log(JSON.stringify(ion));
     // }
-    // console.log(JSON.stringify(ionLists.$getListByType(0)));
+    console.log(JSON.stringify(ionLists.$getListByType(8)));
 
     appState.state = 'SETUP_COMPLETE';
 });

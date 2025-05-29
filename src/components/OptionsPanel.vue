@@ -33,29 +33,31 @@ const questionType = [
 ]
 
 
-const getCations = computed(() => {
+const getCationText = computed(() => {
     const data = [];
     for (let i = 0; i <= 1; i++) {
         data[i] = questionType[i];
     }
     return data;
 });
-const getAnions = computed(() => {
+const getAnionText = computed(() => {
     const data = [];
     for (let i = 2; i <= 6; i++) {
         data.push(questionType[i]);
     }
     return data;
 });
-const getCovalent = computed(() => {
+const getCovalentText = computed(() => {
     const data = [];
     for (let i = 7; i <= 8; i++) {
         data.push(questionType[i]);
     }
     return data;
 });
-const getQuestion = computed(() => {
+const getQuestionTypeText = computed(() => {
     return ["Names ==> Formulas", "Formulas ==> Names", "Names <==> Formulas"];
+    //FIXME: Add in values: //512 for Names ==> Formulas, 1024 for Formulas ==> Names
+    //512 + 1024 = 1536 for Names <==> Formulas
 })
 
 const updateState = () => {
@@ -77,7 +79,7 @@ const updateState = () => {
         }
     });
 
-    appState.QTypeIonic = total;
+    appState.questionOptions = total;
 
     window.alert("Ionic total: " + total);
     appState.state = "OPTIONS_COMPLETE";
@@ -110,7 +112,7 @@ const updateCovalent = () => {
             <div style="background-color:#FFB; padding:2px;text-align:left; margin-bottom:8px;">
                 <fieldset>
                     <legend>Positive Ion Type</legend>
-                    <div v-for="text in getCations" :key=text[2]>
+                    <div v-for="text in getCationText" :key=text[2]>
                         <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]
                             :disabled="isCovalent">
                         <!-- <input type="checkbox" name="cation" id={{text[2]}} value={{text[2]}}> -->
@@ -122,7 +124,7 @@ const updateCovalent = () => {
             <div style="background-color:#BFB; padding:6px;text-align:left; margin-bottom:8px;">
                 <fieldset>
                     <legend>Negative Ion Type</legend>
-                    <div v-for="text in getAnions" :key=text[2]>
+                    <div v-for="text in getAnionText" :key=text[2]>
                         <input type="checkbox" :name="'check' + text[2]" :id="'check' + text[2]" :value=text[2]
                             :disabled="isCovalent">
                         <label class="ml-2 text-gray-800" :for="'check' + text[2]">{{ text[0] }}</label>
@@ -134,7 +136,7 @@ const updateCovalent = () => {
                 title="Selecting covalent disables ionic options">
                 <fieldset>
                     <legend>Covalent Bonds?</legend>
-                    <div v-for="text in getCovalent" :key=text[2]>
+                    <div v-for="text in getCovalentText" :key=text[2]>
                         <input type="checkbox" :name="'covalent' + text[2]" :id="'covalent' + text[2]" :value=text[2]
                             @change="updateCovalent">
                         <label class="ml-2 text-gray-800" :for="'covalent' + text[2]">{{ text[0] }}</label>
@@ -145,7 +147,7 @@ const updateCovalent = () => {
             <div style="background-color:#CDF; padding:6px;text-align:left; margin-bottom:8px;">
                 <fieldset>
                     <legend>Question type</legend>
-                    <div v-for="label in getQuestion" :key=label>
+                    <div v-for="label in getQuestionTypeText" :key=label>
                         <input type="radio" name="question" id={{label}} value={{label}} checked>
                         <label class="ml-2 text-gray-800" for={{label}}>{{ label }}</label>
                     </div>
