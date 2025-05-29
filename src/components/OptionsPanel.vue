@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { defineProps, computed } from 'vue'
+import { defineProps, computed } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
-import { ref } from 'vue'
+import { ref } from 'vue';
 //props
 defineProps({
 
-})
+});
 
 //stores
 const appState = useAppStateStore();
@@ -30,7 +30,7 @@ const questionType = [
     //type of question
     ["Names ==> Formulas", "[-]", 512],
     ["Formulas ==> Names", "[-]", 1024],
-]
+];
 
 
 const getCations = computed(() => {
@@ -56,7 +56,7 @@ const getCovalent = computed(() => {
 });
 const getQuestion = computed(() => {
     return ["Names ==> Formulas", "Formulas ==> Names", "Names <==> Formulas"];
-})
+});
 
 const updateState = () => {
     let total = 0;
@@ -81,19 +81,20 @@ const updateState = () => {
 
     window.alert("Ionic total: " + total);
     appState.state = "OPTIONS_COMPLETE";
-}
+};
 
 const updateCovalent = () => {
 
     let total = 0;
     isCovalent.value = false;
-    const covalent1 = document.getElementById('covalent128');
-    if (covalent1.checked) {
+
+    const covalent1 = document.getElementById('covalent128') as HTMLInputElement;
+    if (covalent1 && covalent1.checked) {
         isCovalent.value = true;
         total += 128;
     }
-    const covalent2 = document.getElementById('covalent256');
-    if (covalent2.checked) {
+    const covalent2 = document.getElementById('covalent256') as HTMLInputElement;
+    if (covalent2 && covalent2.checked) {
         isCovalent.value = true;
         total += 256;
     }

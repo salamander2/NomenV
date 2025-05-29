@@ -3,18 +3,20 @@
 
 #app {
     max-width: 1280px;
-    width: 90%;
+    /* width: 90%; */
     height: 100%;
     margin: 0 auto;
-    padding: 0 8rem;
+    /* padding: 0 8rem; */
     font-weight: normal;
     text-align: center;
     display: grid;
     place-items: center;
+    /* background-color: orange; */
     /* display: grid; */
     /* grid-template-columns: 1fr 1fr; */
 }
 
+/*
 .wrapper {
     margin: 1rem auto;
     display: grid;
@@ -30,14 +32,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: gray solid 2px;
 }
-
-a,
-.green {
-    text-decoration: none;
-    color: hsla(160, 100%, 37%, 1);
-    transition: 0.4s;
-    padding: 3px;
-}
+*/
 
 @media (hover: hover) {
     a:hover {
@@ -152,7 +147,7 @@ body {
     padding: 0 4px;
 }
 
-#dragzone {
+#mainApp {
     /* width: 100vw; */
     /* height: 2000px; */
     /* background: gray; */

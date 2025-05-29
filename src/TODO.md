@@ -24,9 +24,12 @@ NEXT STEP:
 
 setup the question panel.
 
-state=CREATE_QUESTION
+state=GENERATE_QUESTION
 create the formula from the two ions and the charges
 //search through ions.dat to see if the formula exists (in covalent complex) before simplification. If it does, do not simplify it.
+with Covalent simple, make sure to not get hydrogen hydride H+ H-, sulfur sulfide S+2 S-2, etc.
+
+# Make sure that it works on cell phones!
 
 # Security and access control
 

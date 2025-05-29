@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue'
+import { watch, ref } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
-import OptionsPanel from '@/components/OptionsPanel.vue'
+import OptionsPanel from '@/components/OptionsPanel.vue';
 
 //Variables
 const appState = useAppStateStore();
@@ -14,18 +14,18 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'OPTIONS';
             break;
         case 'OPTIONS_COMPLETE':
-            //clear list of questions
+            //clear the list of questions
 
             appState.state = 'GENERATE_QUESTION';
             break;
 
     }
-    console.log(newValue, oldValue)
-})
+    console.log(newValue, oldValue);
+});
 
 const setupApp = () => {
 
-}
+};
 </script>
 
 <template>

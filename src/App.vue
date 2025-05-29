@@ -61,7 +61,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div id="dragzone">
+    <div id="mainApp">
         <header>
             <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
             <div class="font-bold text-3xl font-sans text-gray-400">
@@ -93,12 +93,12 @@ onMounted(() => {
 
         <MainPanel />
 
-        <div class="Xwrapper text-3xl font-bold">
-            <!-- <nav>
+        <!-- <div class="Xwrapper text-3xl font-bold"> -->
+        <!-- <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav> -->
-        </div>
+        <!-- </div> -->
     </div>
-    {{ fileContent }}
+    <!-- {{ fileContent }} -->
 </template>
