@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { defineProps, computed } from 'vue'
+import { defineProps, computed } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
-import { ref } from 'vue'
+import { ref } from 'vue';
 //props
 defineProps({
 
-})
+});
 
 //stores
 const appState = useAppStateStore();
@@ -113,19 +113,20 @@ const updateState = () => {
 
     appState.questionOptions = total;
     appState.state = "OPTIONS_COMPLETE";
-}
+};
 
 const updateCovalent = () => {
 
     // const total = 0;
     isCovalent.value = false;
+
     const covalent1 = document.getElementById('covalent128') as HTMLInputElement;
-    if (covalent1.checked) {
+    if (covalent1 && covalent1.checked) {
         isCovalent.value = true;
         // total += 128;
     }
     const covalent2 = document.getElementById('covalent256') as HTMLInputElement;
-    if (covalent2.checked) {
+    if (covalent2 && covalent2.checked) {
         isCovalent.value = true;
         // total += 256;
     }

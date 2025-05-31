@@ -16,7 +16,7 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'OPTIONS';
             break;
         case 'OPTIONS_COMPLETE':
-            //clear list of questions
+            //clear the list of questions
 
             appState.state = 'GENERATE_QUESTION';
             break;
@@ -46,7 +46,7 @@ function selectIons() {
     const questionOptions = appState.questionOptions;
     let isCovalent = false;
     let isSimpleCovalent = false;
-    //if it has bit 128 set, then it is a covalent question
+    //if it has bit 128 or 256 set, then it is a covalent question
     if (questionOptions & 128) {
         isCovalent = true;
         isSimpleCovalent = true;

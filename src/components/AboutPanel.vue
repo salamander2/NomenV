@@ -18,7 +18,8 @@ const aboutTitle = 'About this program';
 </script>
 
 <template>
-    <SimplePanel class="modal shift-left" :bodyText="bodyText" :closeBtnTop=false @close-panel="$emit('closeAbout')">
+    <SimplePanel class="modal shift-left text-gray-800" :bodyText="bodyText" :closeBtnTop=false
+        @close-panel="$emit('closeAbout')">
         {{ aboutTitle }}
     </SimplePanel>
 </template>
