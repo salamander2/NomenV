@@ -100,5 +100,5 @@ onMounted(() => {
       </nav> -->
         </div>
     </div>
-    {{ fileContent }}
+    <!-- {{ fileContent }} -->
 </template>

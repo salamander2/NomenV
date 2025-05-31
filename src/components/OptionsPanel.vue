@@ -30,6 +30,7 @@ const questionType = [
     //type of question
     ["Names ==> Formulas", "[-]", 512],
     ["Formulas ==> Names", "[-]", 1024],
+    ["Names <==> Formulas", "[-]", 1536]
 ]
 
 
@@ -55,10 +56,12 @@ const getCovalentText = computed(() => {
     return data;
 });
 const getQuestionTypeText = computed(() => {
-    return ["Names ==> Formulas", "Formulas ==> Names", "Names <==> Formulas"];
-    //FIXME: Add in values: //512 for Names ==> Formulas, 1024 for Formulas ==> Names
-    //512 + 1024 = 1536 for Names <==> Formulas
-})
+    const data = [];
+    for (let i = 9; i <= 11; i++) {
+        data.push(questionType[i]);
+    }
+    return data;
+});
 
 const updateState = () => {
     let total = 0;
@@ -71,35 +74,61 @@ const updateState = () => {
             total += parseInt(cat2.value, 10);
         } */
 
-    const ionicCheckboxes = document.querySelectorAll('input[name^="check"]');
-    ionicCheckboxes.forEach((checkbox) => {
+    /*  const ionicCheckboxes = document.querySelectorAll('input[name^="check"]');
+     ionicCheckboxes.forEach((checkbox) => {
+         const ck = checkbox as HTMLInputElement;
+         if (ck.checked) {
+             total += parseInt(ck.value, 10);
+         }
+     }); */
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
         const ck = checkbox as HTMLInputElement;
         if (ck.checked) {
             total += parseInt(ck.value, 10);
         }
+        console.log(total + " " + ck.value + " " + ck.checked);
+
+    });
+    console.log("radio buttons");
+
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    radioButtons.forEach((radio) => {
+        const rb = radio as HTMLInputElement;
+        if (rb.checked) {
+            total += parseInt(rb.value, 10);
+        }
+        console.log(total + " " + rb.value + " " + rb.checked);
     });
 
-    appState.questionOptions = total;
+    //If no "positive ion type" is selected, assume monovalent
+    if (!isCovalent.value && !(total & 3)) {
+        total += 1; // Monovalent
+    }
+    //If no "negative ion type" is selected, assume simple anion
+    if (!isCovalent.value && !(total & 124)) {
+        total += 4; // Simple anion
+    }
 
-    window.alert("Ionic total: " + total);
+    appState.questionOptions = total;
     appState.state = "OPTIONS_COMPLETE";
 }
 
 const updateCovalent = () => {
 
-    let total = 0;
+    // const total = 0;
     isCovalent.value = false;
-    const covalent1 = document.getElementById('covalent128');
+    const covalent1 = document.getElementById('covalent128') as HTMLInputElement;
     if (covalent1.checked) {
         isCovalent.value = true;
-        total += 128;
+        // total += 128;
     }
-    const covalent2 = document.getElementById('covalent256');
+    const covalent2 = document.getElementById('covalent256') as HTMLInputElement;
     if (covalent2.checked) {
         isCovalent.value = true;
-        total += 256;
+        // total += 256;
     }
-
 }
 
 </script>
@@ -147,9 +176,9 @@ const updateCovalent = () => {
             <div style="background-color:#CDF; padding:6px;text-align:left; margin-bottom:8px;">
                 <fieldset>
                     <legend>Question type</legend>
-                    <div v-for="label in getQuestionTypeText" :key=label>
-                        <input type="radio" name="question" id={{label}} value={{label}} checked>
-                        <label class="ml-2 text-gray-800" for={{label}}>{{ label }}</label>
+                    <div v-for="text in getQuestionTypeText" :key=text[2]>
+                        <input type="radio" name="'radio' + text[2]" id="'radio' + text[2]" :value=text[2] checked>
+                        <label class="ml-2 text-gray-800" :for="'radio' + text[2]">{{ text[0] }}</label>
                     </div>
                 </fieldset>
             </div>

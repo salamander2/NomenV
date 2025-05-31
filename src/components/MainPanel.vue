@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { watch, ref } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
+import { useIonListsStore } from '@/stores/ionLists';
+
 import OptionsPanel from '@/components/OptionsPanel.vue'
+import { CATION_SINGLE, CATION_MULTI, ANION_SIMPLE, ANION_OXYACID, ANION_DERIVATIVE, ANION_HYDROGEN, ANION_OTHER, COVALENT_SIMPLE, COVALENT_COMPLEX } from '@/constants.ts';
 
 //Variables
 const appState = useAppStateStore();
+const ionLists = useIonListsStore();
 
 watch(() => appState.state, (newValue: string, oldValue: string) => {
-    window.alert("state updated to " + appState.state);
     switch (appState.state) {
         case 'SETUP_COMPLETE':
             appState.state = 'OPTIONS';
@@ -18,7 +21,7 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'GENERATE_QUESTION';
             break;
         case 'GENERATE_QUESTION':
-            generateQuestion();
+            createQuestion();
             appState.state = 'QUESTION_GENERATED';
             break;
         case 'QUESTION_GENERATED':
@@ -26,10 +29,20 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'SHOW_QUESTION';
             break;
     }
-    console.log(newValue, oldValue)
+    console.log(oldValue + " => " + newValue);
 });
 
-function generateQuestion() {
+function createQuestion() {
+    const data = selectIons();
+    const [cation, anion, isCovalent, isSimpleCovalent] = data;
+
+    if ((typeof cation === 'object') && (typeof anion === 'object')) {
+        generateQuestion(cation, anion, !!isCovalent, !!isSimpleCovalent);
+    } else {
+        console.error('Invalid cation or anion:', cation, anion);
+    }
+}
+function selectIons() {
     const questionOptions = appState.questionOptions;
     let isCovalent = false;
     let isSimpleCovalent = false;
@@ -43,51 +56,78 @@ function generateQuestion() {
         isSimpleCovalent = false;
     }
 
+    const cationType = [];
+    const anionType = [];
     if (!isCovalent) {
         // let cationType = questionOptions & 3; // 1 for monovalent, 2 for multivalent
         // let anionType = questionOptions & 124; // 4 for simple anion, 8 for common polyatomic, etc.
 
-        const cationType = [];
         if (questionOptions & 1) {
-            cationType.push(0); // Monovalent
+            cationType.push(CATION_SINGLE); // Monovalent
         }
         if (questionOptions & 2) {
-            cationType.push(1); // Multivalent
+            cationType.push(CATION_MULTI); // Multivalent
         }
         if (cationType.length === 0) {
-            cationType.push(0); // Default to monovalent if no cation type is selected
+            cationType.push(CATION_SINGLE); // Default to monovalent if no cation type is selected
         }
-        const anionType = [];
+        //anions
         if (questionOptions & 4) {
-            anionType.push(2); // Simple anion
+            anionType.push(ANION_SIMPLE); // Simple anion
         }
         if (questionOptions & 8) {
-            anionType.push(3); // Common polyatomic anion
+            anionType.push(ANION_OXYACID); // Common polyatomic anion
         }
         if (questionOptions & 16) {
-            anionType.push(4); // Derivative polyatomic anion
+            anionType.push(ANION_DERIVATIVE); // Derivative polyatomic anion
         }
         if (questionOptions & 32) {
-            anionType.push(5); // H+ polyatomic anion
+            anionType.push(ANION_HYDROGEN); // H+ polyatomic anion
         }
         if (questionOptions & 64) {
-            anionType.push(6); // Other polyatomic anion
+            anionType.push(ANION_OTHER); // Other polyatomic anion
         }
         if (anionType.length === 0) {
-            anionType.push(2); // Default to simple anion if no anion type is selected
+            anionType.push(ANION_SIMPLE); // Default to simple anion if no anion type is selected
         }
 
     } else {
         //generate covalent question
         if (isSimpleCovalent) {
             console.log("Generating simple covalent question...");
-            //cation = "covalent-simple";
-            //anion = "anion-simple";
+            cationType.push(COVALENT_SIMPLE);
+            anionType.push(ANION_SIMPLE);
         } else {
             console.log("Generating complex covalent question...");
+            cationType.push(COVALENT_COMPLEX); // Complex covalent
+            //anionType is empty.
         }
     }
-    console.log("Generating question...");
+
+    const randomCationIndex = Math.floor(Math.random() * cationType.length);
+    const randomAnionIndex = Math.floor(Math.random() * anionType.length);
+
+    const cation = ionLists.$getRandomIon(cationType[randomCationIndex]) || { name: 'Unknown Cation', formula: 'Unknown Formula' };
+    const anion = ionLists.$getRandomIon(anionType[randomAnionIndex]) || { name: 'Unknown Anion', formula: 'Unknown Formula' };
+
+    console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
+
+    // (cation, anion, isCovalent, isSimpleCovalent);
+    // generateQuestion(cation, anion, isCovalent, isSimpleCovalent);
+    return [cation, anion, isCovalent, isSimpleCovalent];
+}
+
+function generateQuestion(cation: object, anion: object, isCovalent: boolean, isSimpleCovalent: boolean) {
+    // Generate the question based on the selected cation and anion
+    if (isCovalent) {
+        if (isSimpleCovalent) {
+            appState.question = `What is the formula for the covalent compound formed by ${cation[0]} and ${anion[0]}?`;
+        } else {
+            appState.question = `What is the formula for the complex covalent compound formed by ${cation[0]}?`;
+        }
+    } else {
+        appState.question = `What is the formula for the ionic compound formed by ${cation[0]} and ${anion[0]}?`;
+    }
 }
 
 
