@@ -9,3 +9,14 @@ export const ANION_HYDROGEN: number = 5
 export const ANION_OTHER: number = 6
 export const COVALENT_SIMPLE: number = 7
 export const COVALENT_COMPLEX: number = 8
+
+export interface Ion {
+    name: string
+    formula: string
+    charge: number
+    // isMultivalent?: boolean;         //this means "optional property" in TypeScript
+    isMultivalent: boolean
+    isPolyAtom: boolean
+    greek: string
+    roman: string
+}

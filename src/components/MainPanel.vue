@@ -5,8 +5,9 @@ import { useIonListsStore } from '@/stores/ionLists';
 
 import OptionsPanel from '@/components/OptionsPanel.vue'
 import { CATION_SINGLE, CATION_MULTI, ANION_SIMPLE, ANION_OXYACID, ANION_DERIVATIVE, ANION_HYDROGEN, ANION_OTHER, COVALENT_SIMPLE, COVALENT_COMPLEX } from '@/constants.ts';
+import type { Ion } from '@/constants.ts';
 
-//Variables
+//GLobal Variables
 const appState = useAppStateStore();
 const ionLists = useIonListsStore();
 
@@ -26,7 +27,8 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             break;
         case 'QUESTION_GENERATED':
             //show question
-            appState.state = 'SHOW_QUESTION';
+            // appState.state = 'SHOW_QUESTION';
+            appState.state = 'OPTIONS';
             break;
     }
     console.log(oldValue + " => " + newValue);
@@ -107,8 +109,13 @@ function selectIons() {
     const randomCationIndex = Math.floor(Math.random() * cationType.length);
     const randomAnionIndex = Math.floor(Math.random() * anionType.length);
 
-    const cation = ionLists.$getRandomIon(cationType[randomCationIndex]) || { name: 'Unknown Cation', formula: 'Unknown Formula' };
-    const anion = ionLists.$getRandomIon(anionType[randomAnionIndex]) || { name: 'Unknown Anion', formula: 'Unknown Formula' };
+    //cation and anion cannot be the same (eg. for covalent questions, like SeSe)
+    let cation: Ion;
+    let anion: Ion;
+    do {
+        cation = ionLists.$getRandomIon(cationType[randomCationIndex]);
+        anion = ionLists.$getRandomIon(anionType[randomAnionIndex]);
+    } while (cation.formula === anion.formula);
 
     console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
 
@@ -117,19 +124,40 @@ function selectIons() {
     return [cation, anion, isCovalent, isSimpleCovalent];
 }
 
-function generateQuestion(cation: object, anion: object, isCovalent: boolean, isSimpleCovalent: boolean) {
+function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimpleCovalent: boolean) {
     // Generate the question based on the selected cation and anion
-    if (isCovalent) {
-        if (isSimpleCovalent) {
-            appState.question = `What is the formula for the covalent compound formed by ${cation[0]} and ${anion[0]}?`;
-        } else {
-            appState.question = `What is the formula for the complex covalent compound formed by ${cation[0]}?`;
-        }
-    } else {
-        appState.question = `What is the formula for the ionic compound formed by ${cation[0]} and ${anion[0]}?`;
-    }
-}
+    // appState.question = `What is the formula for the ionic compound formed by ${cation[0]} and ${anion[0]}?`;
 
+    if (!isCovalent) {
+        let name = cation.name + " " + anion.name;
+        if (cation.isMultivalent) {
+            name = cation.name + "(" + cation.roman + ") " + anion.name;
+        }
+
+        //Find lowest common denominator of charges (which are always stored as positive integers)
+        //A recursive version of the Euclidean algorithm to find the GCD
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        const cationCount = anion.charge / gcd(cation.charge, anion.charge);
+        const anionCount = cation.charge / gcd(cation.charge, anion.charge);
+        let cationFormula = cation.formula;
+        let anionFormula = anion.formula;
+        if (cation.isPolyAtom && cationCount > 1) cationFormula = "(" + cation.formula + ")";
+        if (anion.isPolyAtom && anionCount > 1) anionFormula = "(" + anion.formula + ")";
+
+        const formula = cationFormula + (cationCount === 1 ? '' : cationCount) + anionFormula + (anionCount === 1 ? '' : anionCount);
+        console.log("ionic formula: " + formula + " name: " + name);
+    }
+
+    if (isCovalent && isSimpleCovalent) {
+        console.log("formula: " + cation.formula + " name: " + cation.name);
+        console.log("formula: " + anion.formula + " name: " + anion.name);
+    }
+
+    if (isCovalent && !isSimpleCovalent) {
+        console.log("formula: " + cation.formula + " name: " + cation.name);
+    }
+
+}
 
 </script>
 

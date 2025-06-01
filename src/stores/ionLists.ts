@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import type { Ion } from '@/constants.ts'
 
 /* This is a 2D array of ion data
 The top level are the types of ions loaded (0-8)
@@ -18,7 +19,7 @@ The top level are the types of ions loaded (0-8)
 	public static final int COVALENT_SIMPLE = 7;
 	public static final int COVALENT_COMPLEX = 8;
 
-The second level is the individual ion data.  This could be an object with key-value pairs instead.
+The second level is the individual ion data.  ***This could be an object with key-value pairs instead.***
     private String name;
 	private String formula;
 	private String charge;
@@ -119,10 +120,21 @@ export const useIonListsStore = defineStore('ionLists', () => {
         return lists.value[type] || []
     }
 
-    function $getRandomIon(type: number) {
+    /* Get a random ion from the specified list of ions.
+    Return an ARRAY -- I should have made this a Tuple.
+    The array was not working with typescript, so I made it a object */
+    function $getRandomIon(type: number): Ion {
         const list = $getListByType(type)
         if (list.length === 0) {
-            return null // No ions available for this type
+            return {
+                name: '',
+                formula: '',
+                charge: 0,
+                isMultivalent: false,
+                isPolyAtom: false,
+                greek: '',
+                roman: '',
+            }
         }
         const randomIndex = Math.floor(Math.random() * list.length)
 
@@ -140,6 +152,7 @@ export const useIonListsStore = defineStore('ionLists', () => {
         const greek = Greek[charge]
         const roman = Roman[charge]
 
+        /*
         return [
             ion[0], // name
             ion[1], // formula
@@ -149,6 +162,17 @@ export const useIonListsStore = defineStore('ionLists', () => {
             isMultivalent ? greek : '', // greek prefix
             isMultivalent ? roman : '', // roman numeral
         ]
+        */
+        //This must be an object not an array, since TypeScript will complain about the return type
+        return {
+            name: ion[0],
+            formula: ion[1],
+            charge: charge,
+            isMultivalent: ion[3],
+            isPolyAtom: ion[4],
+            greek: isMultivalent ? greek : '',
+            roman: isMultivalent ? roman : '',
+        }
     }
 
     return { lists, ionTypes, $addIon, $getRandomIon, $getListByType }
