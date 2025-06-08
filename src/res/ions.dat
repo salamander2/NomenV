@@ -77,7 +77,7 @@ dihydrogen phosphate,H2PO4,1
 dihydrogen phosphite,H2PO3,1
 hydrogen carbonate,HCO3,1
 hydrogen phosphate,HPO4,2
-hydrogen phosphite,HPO3,2 
+hydrogen phosphite,HPO3,2
 hydrogen sulfate,HSO4,1
 hydrogen sulfide,HS,1
 hydrogen sulfite,HSO3,1
@@ -112,6 +112,7 @@ carbon monoxide,CO
 methane,CH4
 ozone,O3
 water,H2O
+oxygen difluoride,OF2
 disulfur difluoride,S2F2
 sulfur tetrafluoride,SF4
 disulfur decafluoride,S2F10
@@ -125,11 +126,11 @@ sulfur monoxide,SO
 sulfur sesquioxide,S2O3
 sulfur tetroxide,SO4
 disulfur heptoxide,S2O7
-nitric oxide,NO
+nitrogen monoxide,NO,nitric oxide,
 nitrogen dioxide,NO2
-nitrous oxide,N2O
+dinitrogen monoxide,N2O,nitrous oxide
 dinitrogen trioxide,N2O3
 dinitrogen tetroxide,N2O4
 dinitrogen pentoxide,N2O5
-
-
+dichlorine heptoxide,Cl2O7
+chlorine monofluoride, ClF

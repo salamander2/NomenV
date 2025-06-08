@@ -2,18 +2,32 @@
 import { watch, ref } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useIonListsStore } from '@/stores/ionLists';
+import { useQuestionStore } from '@/stores/question';
 
 import OptionsPanel from '@/components/OptionsPanel.vue'
 import { CATION_SINGLE, CATION_MULTI, ANION_SIMPLE, ANION_OXYACID, ANION_DERIVATIVE, ANION_HYDROGEN, ANION_OTHER, COVALENT_SIMPLE, COVALENT_COMPLEX } from '@/constants.ts';
 import type { Ion } from '@/constants.ts';
+import QuestionPanel from './QuestionPanel.vue';
 
 //GLobal Variables
+const Greek = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa', 'nona', 'deca']
 const appState = useAppStateStore();
 const ionLists = useIonListsStore();
+const question = useQuestionStore();
 
 watch(() => appState.state, (newValue: string, oldValue: string) => {
     switch (appState.state) {
+        // case 'SETUP':
+        //initialize the app
+        // console.log("Setting up the app...");
+        //load ions from file
+        // ionLists.$loadIonsFromFile();
+        //set the state to SETUP_COMPLETE
+        // appState.state = 'SETUP_COMPLETE';
+        // break;
         case 'SETUP_COMPLETE':
+            //reset the question options
+            appState.questionOptions = 0;
             appState.state = 'OPTIONS';
             break;
         case 'OPTIONS_COMPLETE':
@@ -27,8 +41,8 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             break;
         case 'QUESTION_GENERATED':
             //show question
-            // appState.state = 'SHOW_QUESTION';
-            appState.state = 'OPTIONS';
+            appState.state = 'SHOW_QUESTION';
+            // appState.state = 'OPTIONS';
             break;
     }
     console.log(oldValue + " => " + newValue);
@@ -146,15 +160,42 @@ function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimple
 
         const formula = cationFormula + (cationCount === 1 ? '' : cationCount) + anionFormula + (anionCount === 1 ? '' : anionCount);
         console.log("ionic formula: " + formula + " name: " + name);
+
+        question.setQuestion(name, formula, isCovalent, isSimpleCovalent, cation, anion);
     }
+
+
+    /* COVALENT QUESTIONS */
+    // We HAVE to add in electronegativity to get the covalent ion order right.
+    //Covalent Simple will be one long list of elements with electronegativity, positive charges, negative charge, negative name
+    //We'll select two different elements from that list, and then generate the formula and name based on their electronegativity.
+    //Oxygen is always the most electronegative, so it will always be the anion except for with Fluorine, which is the most electronegative element.
+
+    //Complex covalent: we need to list alternative names for NO and N2O, so an extra column
+    //And then somehow handle it in the question checking logic.
 
     if (isCovalent && isSimpleCovalent) {
+
+        //Find LCD again (eg. C2O4 -> CO2)
+        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+        const cationCount = anion.charge / gcd(cation.charge, anion.charge);
+        const anionCount = cation.charge / gcd(cation.charge, anion.charge);
+
+        //None are polyatomic
+        const formula = cation.formula + (cationCount === 1 ? '' : cationCount) + anion.formula + (anionCount === 1 ? '' : anionCount);
+        const name = (cationCount > 1 ? Greek[cationCount] : '') + cation.name + " " + Greek[anionCount] + anion.name;
+        console.log("covalent formula: " + formula + " name: " + name);
         console.log("formula: " + cation.formula + " name: " + cation.name);
         console.log("formula: " + anion.formula + " name: " + anion.name);
+
+        // question.setQuestion(name, formula, cation, anion, isCovalent, isSimpleCovalent);
     }
 
+    //Complex covalent question
     if (isCovalent && !isSimpleCovalent) {
         console.log("formula: " + cation.formula + " name: " + cation.name);
+
+
     }
 
 }
@@ -165,5 +206,6 @@ function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimple
 
     <!-- <h1>Nomenclature Quiz Program {{ appState.state }}</h1> -->
     <OptionsPanel v-if="appState.state === 'OPTIONS'" />
+    <QuestionPanel v-if="appState.state === 'SHOW_QUESTION'" />
 
 </template>

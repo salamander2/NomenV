@@ -9,8 +9,10 @@ export const useQuestionStore = defineStore('question', () => {
         isSimpleCovalent: false,
         cation: {},
         anion: {},
+        alternativeName: '',  //only for complex covalent
     })
 
+    //FIXME why do I not need "actions: {}" here?
     function setQuestion(
         name: string,
         formula: string,
@@ -18,13 +20,15 @@ export const useQuestionStore = defineStore('question', () => {
         isSimpleCovalent: boolean,
         cation: object,
         anion: object,
+        alternativeName?: string,
     ) {
-        question.value.name = name
-        question.value.formula = formula
-        question.value.isCovalent = isCovalent
-        question.value.isSimpleCovalent = isSimpleCovalent
-        question.value.cation = cation
-        question.value.anion = anion
+        question.value.name = name;
+        question.value.formula = formula;
+        question.value.isCovalent = isCovalent;
+        question.value.isSimpleCovalent = isSimpleCovalent;
+        question.value.cation = cation;
+        question.value.anion = anion;
+        question.value.alternativeName = alternativeName ?? ''; // Default to empty string if not provided
     }
 
     return { question, setQuestion }

@@ -74,7 +74,7 @@ onMounted(() => {
             </div>
         </header>
 
-        <div style="display:flex;justify-content: space-between;">
+        <div Xstyle="display:flex;justify-content: space-between;" class="flex justify-between mb-4">
             <button type="button" @click="showAbout" class="btnOK">About</button>
             <button type="button" @click="showPeriodic" class="btnOK">Periodic</button>
         </div>
