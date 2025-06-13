@@ -36,7 +36,7 @@ const Greek = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa
 export const useIonListsStore = defineStore('ionLists', () => {
     // const lists = ref([]);
     // const lists: Ref<ListsType> = ref({});
-    const lists = ref<Array<Array<[string, string, number, boolean, boolean]>>>([])
+    const lists = ref<Array<Array<[string, string, number, boolean, boolean, string, number, number]>>>([])
 
     const ionTypes = [
         '[cations-monovalent]', //0
@@ -58,13 +58,23 @@ export const useIonListsStore = defineStore('ionLists', () => {
     // function $addIon(name: string, formula: string, charge: number, type: number) {
     function $addIon(type: number, line: string) {
         // Parse the line into name, formula, charge
-        const parts = line.split(',')
-        const name = parts[0].trim()
-        const formula = parts[1].trim()
-        let charge = 0
-        if (type != ionTypes.length - 1) {
-            //was != 8
-            // complex covalent has no charge
+        const parts = line.split(',');
+        const name = parts[0].trim();
+        const formula = parts[1].trim();
+        let charge = 0;
+        let altName = '';
+        let chargeN = 0;
+        let electronegativity = 0;
+        if (type == ionTypes.indexOf('[covalent-complex]')) {
+            //no charge, but rather, an alternate name
+            altName = parts[2]?.trim();
+        } else if (type == ionTypes.indexOf('[covalent-simple]')) {
+            altName = parts[2]?.trim(); //-ide form of name
+            charge = parseInt(parts[3].trim());
+            chargeN = parseInt(parts[4].trim());
+            electronegativity = parseFloat(parts[5].trim());
+
+        } else {
             charge = parseInt(parts[2].trim())
             if (isNaN(charge)) {
                 console.error('Invalid charge value:', parts[2].trim())
@@ -77,7 +87,7 @@ export const useIonListsStore = defineStore('ionLists', () => {
         }
         // Validate the type
         if (type < 0 || type >= ionTypes.length || !lists.value[type]) {
-            console.error('Invalid ion type:', type)
+            // console.error('Invalid ion type:', type)
             return
         }
         /*
@@ -101,12 +111,18 @@ export const useIonListsStore = defineStore('ionLists', () => {
         if (capitalLetters && capitalLetters.length > 1) {
             isPolyAtom = true
         }
-        const data = [name, formula, charge, isMultivalent, isPolyAtom] as [
+        //charge is for cation or anion
+        //for covalent charge will be the + charge, and so multivalent will still work
+        //altName is the altname for complex covalent or the -ide name for simple covalent
+        const data = [name, formula, charge, isMultivalent, isPolyAtom, altName, chargeN, electronegativity] as [
             string,
             string,
             number,
             boolean,
             boolean,
+            string,
+            number,
+            number
         ]
         lists.value[type].push(data)
     }
@@ -114,10 +130,25 @@ export const useIonListsStore = defineStore('ionLists', () => {
     //get a list of all ions of a specific type
     function $getListByType(type: number) {
         if (type < 0 || type >= ionTypes.length) {
-            console.error('Invalid ion type:', type)
+            // console.error('Invalid ion type:', type) //this is intentional sometimes, in order to get an empty ion object
             return []
         }
         return lists.value[type] || []
+    }
+
+    function $getEmptyIon(): Ion {
+        return {
+            name: '',
+            formula: '',
+            charge: 0,
+            isMultivalent: false,
+            isPolyAtom: false,
+            altName: '',
+            chargeN: 0,
+            electronegativity: 0,
+            greek: '',
+            roman: '',
+        }
     }
 
     /* Get a random ion from the specified list of ions.
@@ -126,16 +157,9 @@ export const useIonListsStore = defineStore('ionLists', () => {
     function $getRandomIon(type: number): Ion {
         const list = $getListByType(type)
         if (list.length === 0) {
-            return {
-                name: '',
-                formula: '',
-                charge: 0,
-                isMultivalent: false,
-                isPolyAtom: false,
-                greek: '',
-                roman: '',
-            }
+            return $getEmptyIon();
         }
+
         const randomIndex = Math.floor(Math.random() * list.length)
 
         //We will return an array with the following data:
@@ -170,10 +194,13 @@ export const useIonListsStore = defineStore('ionLists', () => {
             charge: charge,
             isMultivalent: ion[3],
             isPolyAtom: ion[4],
+            altName: ion[5],
+            chargeN: ion[6],
+            electronegativity: ion[7],
             greek: isMultivalent ? greek : '',
             roman: isMultivalent ? roman : '',
         }
     }
 
-    return { lists, ionTypes, $addIon, $getRandomIon, $getListByType }
+    return { lists, ionTypes, $addIon, $getRandomIon, $getEmptyIon, $getListByType }
 })

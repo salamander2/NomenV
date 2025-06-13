@@ -89,10 +89,10 @@ const updateState = () => {
         if (ck.checked) {
             total += parseInt(ck.value, 10);
         }
-        console.log(total + " " + ck.value + " " + ck.checked);
+        // console.log(total + " " + ck.value + " " + ck.checked);
 
     });
-    console.log("radio buttons");
+    // console.log("radio buttons");
 
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     radioButtons.forEach((radio) => {
@@ -100,7 +100,7 @@ const updateState = () => {
         if (rb.checked) {
             total += parseInt(rb.value, 10);
         }
-        console.log(total + " " + rb.value + " " + rb.checked);
+        // console.log(total + " " + rb.value + " " + rb.checked);
     });
 
     //If no "positive ion type" is selected, assume monovalent

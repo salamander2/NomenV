@@ -13,7 +13,7 @@ import QuestionPanel from './QuestionPanel.vue';
 const Greek = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa', 'nona', 'deca']
 const appState = useAppStateStore();
 const ionLists = useIonListsStore();
-const question = useQuestionStore();
+const questionStore = useQuestionStore();
 
 watch(() => appState.state, (newValue: string, oldValue: string) => {
     switch (appState.state) {
@@ -41,24 +41,32 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             break;
         case 'QUESTION_GENERATED':
             //show question
-            appState.state = 'SHOW_QUESTION';
-            // appState.state = 'OPTIONS';
+            // appState.state = 'SHOW_QUESTION';
+            appState.state = 'OPTIONS';
             break;
     }
     console.log(oldValue + " => " + newValue);
 });
 
 function createQuestion() {
+
     const data = selectIons();
     const [cation, anion, isCovalent, isSimpleCovalent] = data;
 
-    if ((typeof cation === 'object') && (typeof anion === 'object')) {
-        generateQuestion(cation, anion, !!isCovalent, !!isSimpleCovalent);
+    // if ((typeof cation === 'object') && (typeof anion === 'object')) {
+    if (isCovalent) {
+        console.log("Generating covalent question...");
+        generateCovalentQuestion(cation, anion, isSimpleCovalent);
     } else {
-        console.error('Invalid cation or anion:', cation, anion);
+        console.log("Generating ionic question...");
+        generateIonicQuestion(cation, anion);
     }
+    // } else {
+    // console.error('Invalid cation or anion:', cation, anion);
+    // }
 }
-function selectIons() {
+
+function selectIons(): [Ion, Ion, boolean, boolean] {
     const questionOptions = appState.questionOptions;
     let isCovalent = false;
     let isSimpleCovalent = false;
@@ -74,6 +82,9 @@ function selectIons() {
 
     const cationType = [];
     const anionType = [];
+    let cation: Ion = ionLists.$getEmptyIon();
+    let anion: Ion = ionLists.$getEmptyIon();
+
     if (!isCovalent) {
         // let cationType = questionOptions & 3; // 1 for monovalent, 2 for multivalent
         // let anionType = questionOptions & 124; // 4 for simple anion, 8 for common polyatomic, etc.
@@ -107,63 +118,88 @@ function selectIons() {
             anionType.push(ANION_SIMPLE); // Default to simple anion if no anion type is selected
         }
 
-    } else {
-        //generate covalent question
-        if (isSimpleCovalent) {
-            console.log("Generating simple covalent question...");
-            cationType.push(COVALENT_SIMPLE);
-            anionType.push(ANION_SIMPLE);
-        } else {
-            console.log("Generating complex covalent question...");
-            cationType.push(COVALENT_COMPLEX); // Complex covalent
-            //anionType is empty.
-        }
-    }
+        const randomCationIndex = Math.floor(Math.random() * cationType.length);
+        const randomAnionIndex = Math.floor(Math.random() * anionType.length);
 
-    const randomCationIndex = Math.floor(Math.random() * cationType.length);
-    const randomAnionIndex = Math.floor(Math.random() * anionType.length);
-
-    //cation and anion cannot be the same (eg. for covalent questions, like SeSe)
-    let cation: Ion;
-    let anion: Ion;
-    do {
         cation = ionLists.$getRandomIon(cationType[randomCationIndex]);
         anion = ionLists.$getRandomIon(anionType[randomAnionIndex]);
-    } while (cation.formula === anion.formula);
+
+    }
+    //generate covalent question
+    else {
+        if (isSimpleCovalent) {
+            console.log("Generating simple covalent question...");
+            while (true) {
+                cation = ionLists.$getRandomIon(COVALENT_SIMPLE);
+                anion = ionLists.$getRandomIon(COVALENT_SIMPLE);
+
+                //put the least electronegative as the cation
+                if (cation.electronegativity > anion.electronegativity) {
+                    // console.log(`Swapping cation and anion: ${cation.name} (${cation.electronegativity}) <-> ${anion.name} (${anion.electronegativity})`);
+                    const temp = cation;
+                    cation = anion;
+                    anion = temp;
+                }
+
+                //Restrictive rules
+                if (cation.formula === anion.formula) continue;
+                if (cation.charge == 0) continue;
+                if (anion.chargeN == 0) continue;
+                if (anion.altName == '--') continue;  //This is for B and Si which do not have a -ide form
+                //Avoid special names, they go in covalent-complex:  H3N, H4C, H2O, all NxOy, all SxOy
+                if (cation.formula === 'H') {
+                    if (anion.formula === 'C' || anion.formula === 'N' || anion.formula === 'O') continue;
+                }
+                if (anion.formula === 'O') {
+                    if (cation.formula === 'N' || cation.formula === 'S') continue;
+                }
+
+                //ClF  --> set Cl charge = 1;
+                if (cation.formula === 'Cl' && anion.formula === 'F') {
+                    cation.charge = 1;
+                    cation.isMultivalent = false;
+                }
+
+                break;
+            }
+        } else {
+            console.log("Generating complex covalent question...");
+            cation = ionLists.$getRandomIon(COVALENT_COMPLEX);
+            //anionType and anion are empty.
+        }
+    }
 
     console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
 
-    // (cation, anion, isCovalent, isSimpleCovalent);
-    // generateQuestion(cation, anion, isCovalent, isSimpleCovalent);
     return [cation, anion, isCovalent, isSimpleCovalent];
 }
 
-function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimpleCovalent: boolean) {
+function generateIonicQuestion(cation: Ion, anion: Ion) {
     // Generate the question based on the selected cation and anion
     // appState.question = `What is the formula for the ionic compound formed by ${cation[0]} and ${anion[0]}?`;
 
-    if (!isCovalent) {
-        let name = cation.name + " " + anion.name;
-        if (cation.isMultivalent) {
-            name = cation.name + "(" + cation.roman + ") " + anion.name;
-        }
-
-        //Find lowest common denominator of charges (which are always stored as positive integers)
-        //A recursive version of the Euclidean algorithm to find the GCD
-        const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
-        const cationCount = anion.charge / gcd(cation.charge, anion.charge);
-        const anionCount = cation.charge / gcd(cation.charge, anion.charge);
-        let cationFormula = cation.formula;
-        let anionFormula = anion.formula;
-        if (cation.isPolyAtom && cationCount > 1) cationFormula = "(" + cation.formula + ")";
-        if (anion.isPolyAtom && anionCount > 1) anionFormula = "(" + anion.formula + ")";
-
-        const formula = cationFormula + (cationCount === 1 ? '' : cationCount) + anionFormula + (anionCount === 1 ? '' : anionCount);
-        console.log("ionic formula: " + formula + " name: " + name);
-
-        question.setQuestion(name, formula, isCovalent, isSimpleCovalent, cation, anion);
+    let name = cation.name + " " + anion.name;
+    if (cation.isMultivalent) {
+        name = cation.name + "(" + cation.roman + ") " + anion.name;
     }
 
+    //Find lowest common denominator of charges (which are always stored as positive integers)
+    //A recursive version of the Euclidean algorithm to find the GCD
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+    const cationCount = anion.charge / gcd(cation.charge, anion.charge);
+    const anionCount = cation.charge / gcd(cation.charge, anion.charge);
+    let cationFormula = cation.formula;
+    let anionFormula = anion.formula;
+    if (cation.isPolyAtom && cationCount > 1) cationFormula = "(" + cation.formula + ")";
+    if (anion.isPolyAtom && anionCount > 1) anionFormula = "(" + anion.formula + ")";
+
+    const formula = cationFormula + (cationCount === 1 ? '' : cationCount) + anionFormula + (anionCount === 1 ? '' : anionCount);
+    console.log("ionic formula: " + formula + " name: " + name);
+
+    questionStore.setQuestion(name, formula, false, false, cation, anion);
+}
+
+function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boolean) {
 
     /* COVALENT QUESTIONS */
     // We HAVE to add in electronegativity to get the covalent ion order right.
@@ -174,7 +210,7 @@ function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimple
     //Complex covalent: we need to list alternative names for NO and N2O, so an extra column
     //And then somehow handle it in the question checking logic.
 
-    if (isCovalent && isSimpleCovalent) {
+    if (isSimpleCovalent) {
 
         //Find LCD again (eg. C2O4 -> CO2)
         const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
@@ -188,14 +224,12 @@ function generateQuestion(cation: Ion, anion: Ion, isCovalent: boolean, isSimple
         console.log("formula: " + cation.formula + " name: " + cation.name);
         console.log("formula: " + anion.formula + " name: " + anion.name);
 
-        // question.setQuestion(name, formula, cation, anion, isCovalent, isSimpleCovalent);
+        // question.setQuestion(name, formula, cation, anion, true, isSimpleCovalent);
     }
 
     //Complex covalent question
-    if (isCovalent && !isSimpleCovalent) {
-        console.log("formula: " + cation.formula + " name: " + cation.name);
-
-
+    if (!isSimpleCovalent) {
+        console.log("formula: " + cation.formula + " name: " + cation.name + " alt name: " + cation.altName);
     }
 
 }

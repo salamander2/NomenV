@@ -9,7 +9,7 @@ import { useQuestionStore } from '@/stores/question';
 // import { useRoute } from 'vue-router';
 
 const appState = useAppStateStore();
-const question = useQuestionStore();
+const questionStore = useQuestionStore();
 
 const emit = defineEmits(['closePanel']);
 const closePanel = () => {
@@ -25,17 +25,9 @@ const answerType = ref(0);
 // const aboutTitle = ref(questionTexts[answerType.value]);
 const panelTitle = ref("Question 1 of 20");
 
-const bodyText = ref(
-    `<p class="italic font-bold text-orange-800">${questionTexts[answerType.value]}</p>
-    <p class="font-bold text-blue-900 text-lg">${question.question.name}</p>
-      <div class="text-emph">Michael Harwood</div>
-      <div style='padding-bottom:5px;'>It is free for trial purposes,
-    but you must pay the registration fee if you want to continue to use it.</div>
-      <P>Contact <span class="text-emph">'harwood@quarkphysics.ca'</span><br>
-    for licensing information</p>
-    <p>or see the webpage<br>
-    <a href="https://quarkphysics.ca/nomen" target="_blank" class="text-emph">https://quarkphysics.ca/nomen</a>
-      </div>`);
+const isGiveupVisble = ref(false);
+
+const bodyText = ref('');
 
 function chooseAnswerType() {
     if (appState.questionOptions & 512) answerType.value = 0; //name
@@ -49,9 +41,33 @@ function chooseAnswerType() {
     // panelTitle.value = "testing";
 }
 
+function setText() {
+    bodyText.value = `<span class="text-sm">The correct answer is:</span><br><span class="text-emph">${questionStore.question.name} <br> ${questionStore.question.formula}</span>`;
+}
+
+function giveUp() {
+    isGiveupVisble.value = true;
+}
+
+function checkAnswer() {
+
+}
+
+
+function toSubscriptUnicode(number: number): string {
+    const subscriptMap = {
+        '0': '\u2080', '1': '\u2081', '2': '\u2082', '3': '\u2083', '4': '\u2084',
+        '5': '\u2085', '6': '\u2086', '7': '\u2087', '8': '\u2088', '9': '\u2089'
+    };
+    return String(number).split('').map(digit =>
+        subscriptMap[digit as keyof typeof subscriptMap]
+        || digit).join('');
+}
+
+
 onMounted(() => {
     chooseAnswerType();
-    // setText();
+    setText();
 });
 
 </script>
@@ -64,19 +80,27 @@ onMounted(() => {
         </div>
         <div class="body">
             <p class="italic font-bold text-orange-800">{{ questionTexts[answerType] }}</p>
-            <p class="font-bold text-blue-900 text-lg">{{ question.question.name }}</p>
+            <p class="font-bold text-blue-900 text-lg">{{ questionStore.question.name }}</p>
             <div class="mt-2 mb-4">
                 <div class="text-left text-sm text-gray-600">Enter your answer:</div>
                 <input type="text" class="w-full border bg-white Xpl-2 text-bold text-center" id="inputAnswer"
                     name="inputAnswer" autofocus />
             </div>
-            v-html="bodyText"
-            <div class="flex justify-between">
-                <button type="button" class="btnOK" @click="closePanel">I Give Up</button>
-                <button type="button" class="btnOK" @click="closePanel">Check Answer</button>
+            <div class="mt-8 flex flex-grow justify-between">
+                <button type="button" class="Xw-full btnOK !bg-orange-300" @click="giveUp">
+                    &nbsp;&nbsp;I Give Up&nbsp;&nbsp;</button>
+                <button type="button" class="Xw-full btnOK !bg-emerald-300" @click="checkAnswer">Check Answer</button>
             </div>
         </div>
 
     </div>
-
+    <!-- put all modals to the bottom of the HTML, right before the end of BODY -->
+    <teleport to="body">
+        <!-- Nothing else can be in here or it will no longer center -->
+        <div v-if="isGiveupVisble" class="modal-mask">
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="bodyText" @closePanel="isGiveupVisble = false">Correct
+                Answer
+            </SimplePanel>
+        </div>
+    </teleport>
 </template>

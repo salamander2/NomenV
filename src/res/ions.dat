@@ -91,28 +91,43 @@ permanganate,MnO4,1
 thiocyanate,SCN,1
 thiosulfate,S2O3,2
 
-;these are the covalent positive oxidation number elements
-;for the negative ones, just use the Anions-simple
 ;only put the common oxidation numbers here. Put the weird compounds in [Covalent-complex]
 [Covalent-simple]
-;oxygen,O,2
-arsenic,As,35
-carbon,C,4
-hydrogen,H,1
-nitrogen,N,3
-phosphorus,P,53
-selenium,Se,24
-silicon,Si,4
-sulfur,S,2
+; name, symbol, name-ide, positive charges, negative charge, electronegativity.
+; charge of zero means that it is not valid for that type of "ion" (+ or -)
+; oxygen is always last except for OF2, but electronegativity should sort this.
+; Prohibit: boron second, and XX.
+; Silicon is only  with H or O.
+; C and Si need LCM
+hydrogen,H,hydride,1,1,2.2
+boron,B,--,3,0,2.04
+carbon,C,carbide,4,4,2.55
+nitrogen,N,nitride,3,3,3.04
+oxygen,O,oxide,2,2,3.44
+fluorine,F,fluoride,0,1,3.98
+
+;silicon,Si,--,4,0,1.9
+phosphorus,P,phosphide,53,3,2.19
+sulfur,S,sulfide,246,2,2.58
+
+chloride,Cl,chloride,1357,1,3.16
+arsenic,As,arsenide,35,3,2.18
+selenium,Se,selenide,46,2,2.55
+bromide,Br,bromide,15,1,2.96
+iodide,I,iodide,157,1,2.66
+
 
 [Covalent-complex]
+;these may have an alternate name
 ;note: spelling: Sulfur, fluoride
-ammonia,NH3
+nitrogen trihydride,NH3,ammonia
 carbon monoxide,CO
-methane,CH4
+carbon tetrahydride,CH4,methane
 ozone,O3
-water,H2O
-oxygen difluoride,OF2
+dihydrogen monoxide,H2O,water
+;oxygen difluoride,OF2
+silicon tetrahydride,SiH4,silane
+silicon dioxide,SiO2,quartz
 disulfur difluoride,S2F2
 sulfur tetrafluoride,SF4
 disulfur decafluoride,S2F10
@@ -133,4 +148,6 @@ dinitrogen trioxide,N2O3
 dinitrogen tetroxide,N2O4
 dinitrogen pentoxide,N2O5
 dichlorine heptoxide,Cl2O7
-chlorine monofluoride, ClF
+chlorine monofluoride, ClF
+
+;[Acids]

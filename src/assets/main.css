@@ -103,6 +103,11 @@ body {
     inset: 0;
     display: grid;
     place-items: center;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
 }
 
 .modal {
@@ -126,7 +131,7 @@ body {
 
 .btnOK {
     border: 1px solid gray;
-    padding: 2px 5px;
+    padding: 2px 6px;
     border-radius: 5px;
     background-color: #ccc;
     color: black;
