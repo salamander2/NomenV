@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import SimplePanel from './SimplePanel.vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useQuestionStore } from '@/stores/question';
@@ -28,6 +28,45 @@ const panelTitle = ref("Question 1 of 20");
 const isGiveupVisble = ref(false);
 
 const bodyText = ref('');
+const inputAnswer = ref<HTMLInputElement | null>(null);
+
+//detect F1 keypress
+function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'F1') {
+        event.preventDefault(); // Prevent the default help action
+        showHelp();
+    }
+    if (event.key === 'F2') {
+        event.preventDefault();
+        showHelp();
+    }
+    if (event.key === 'F3') {
+        event.preventDefault();
+        showHelp();
+    }
+}
+function handleInputKey(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission
+        checkAnswer();
+    }
+
+    console.log('Input key:', event.key);
+    inputAnswer.value = document.querySelector('#inputAnswer') as HTMLInputElement;
+
+    console.log('Input element:', inputAnswer.value?.value);
+
+    // Set the value of the input element
+    if (inputAnswer.value) {
+        inputAnswer.value.value = toSubscriptUnicode(inputAnswer.value.value);
+    }
+
+}
+function showHelp() {
+    // This function can be used to show help or instructions
+    window.alert('Help: Enter the name or formula of the compound as prompted. Use the buttons to check your answer or give up.');
+}
+
 
 function chooseAnswerType() {
     if (appState.questionOptions & 512) answerType.value = 0; //name
@@ -66,8 +105,21 @@ function toSubscriptUnicode(number: string): string {
 
 
 onMounted(() => {
+    document.addEventListener('keydown', handleKeydown);
+
+    if (inputAnswer.value) {
+        inputAnswer.value.addEventListener('keyup', handleInputKey);
+    }
+
     chooseAnswerType();
     setText();
+});
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeydown);
+    if (inputAnswer.value) {
+        inputAnswer.value.removeEventListener('keyup', handleInputKey);
+    }
 });
 
 </script>
@@ -76,6 +128,7 @@ onMounted(() => {
     <div class="window bg-gray-50">
         <div class="title">
             {{ panelTitle }}
+            <button class="btnQ" @click="showHelp">?</button>
             <button class="btnX" @click="$emit('closePanel')">&times;</button>
         </div>
         <div class="body">
@@ -83,8 +136,8 @@ onMounted(() => {
             <p class="font-bold text-blue-900 text-lg">{{ questionStore.question.name }}</p>
             <div class="mt-2 mb-4">
                 <div class="text-left text-sm text-gray-600">Enter your answer:</div>
-                <input type="text" class="w-full border bg-white Xpl-2 text-bold text-center" id="inputAnswer"
-                    name="inputAnswer" autofocus />
+                <input type="text" class="w-full border text-black bg-white Xpl-2 text-bold text-center"
+                    id="inputAnswer" ref="inputAnswer" autofocus />
             </div>
             <div class="mt-8 flex flex-grow justify-between">
                 <button type="button" class="Xw-full btnOK !bg-orange-300" @click="giveUp">
@@ -98,8 +151,8 @@ onMounted(() => {
     <teleport to="body">
         <!-- Nothing else can be in here or it will no longer center -->
         <div v-if="isGiveupVisble" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="bodyText" @closePanel="isGiveupVisble = false">Correct
-                Answer
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="bodyText" @closePanel="isGiveupVisble = false">
+                Correct Answer
             </SimplePanel>
         </div>
     </teleport>

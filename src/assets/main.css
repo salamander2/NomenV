@@ -141,8 +141,9 @@ body {
     background-color: rgb(223, 223, 223);
 }
 
-.btnX {
-    border: 1px outset white;
+.btnX,
+.btnQ {
+    border: 1px outset #EEE;
     border-radius: 3px;
     background-color: #444;
     color: white;
@@ -150,6 +151,13 @@ body {
     /* font-size: 110%; */
     float: right;
     padding: 0 4px;
+}
+
+.btnQ {
+    float: left;
+    color: black;
+    background-color: #EEF;
+    border-color: #333;
 }
 
 #mainApp {
