@@ -99,6 +99,7 @@ thiosulfate,S2O3,2
 ; Prohibit: boron second, and XX.
 ; Silicon is only  with H or O.
 ; C and Si need LCM
+; nonhalogen+halogen: halogen comes last: NI3, not I3N
 hydrogen,H,hydride,1,1,2.2
 boron,B,--,3,0,2.04
 carbon,C,carbide,4,4,2.55

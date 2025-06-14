@@ -9,7 +9,7 @@ export const useQuestionStore = defineStore('question', () => {
         isSimpleCovalent: false,
         cation: {},
         anion: {},
-        alternativeName: '',  //only for complex covalent
+        alternativeName: '',  //for complex covalent, and also for simple covalent where it stores the negative value of the name (-ide)
     })
 
     //FIXME why do I not need "actions: {}" here?
