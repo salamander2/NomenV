@@ -45,15 +45,15 @@ onMounted(() => {
             // console.log(ionType + " " + line);
         } else {
             // console.log(ionType + " " + line);
-            ionLists.$addIon(ionType, line);
+            ionLists.addIon(ionType, line);
         }
     });
 
     // for (let i = 0; i < 100; i++) {
-    //     let ion = ionLists.$getRandomIon(1);
+    //     let ion = ionLists.getRandomIon(1);
     //     if (ion[0] == 'manganese') console.log(JSON.stringify(ion));
     // }
-    console.log(JSON.stringify(ionLists.$getListByType(8)));
+    console.log(JSON.stringify(ionLists.getListByType(8)));
 
     appState.state = 'SETUP_COMPLETE';
 });

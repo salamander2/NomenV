@@ -1,37 +1,43 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import SimplePanel from './SimplePanel.vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useQuestionStore } from '@/stores/question';
+import { useQuestionListsStore } from '@/stores/questionLists';
 
 // import { defineComponent } from 'vue';
 // import { useStore } from 'vuex';
 // import { useRoute } from 'vue-router';
+const FORMULA: number = 0;
+const NAME: number = 1;
 
 const appState = useAppStateStore();
 const questionStore = useQuestionStore();
+const questionListsStore = useQuestionListsStore();
 
-const emit = defineEmits(['closePanel']);
-const closePanel = () => {
-    // Emit the closePanel event to the parent component
-    emit('closePanel');
-};
+// const emit = defineEmits(['closePanel']);
+// const closePanel = () => {
+// Emit the closePanel event to the parent component
+// emit('closePanel');
+// };
 
+// ========  Constants and Data ======== //
 const questionTexts = [
     'Enter the formula for this compound:',
     'Enter the name for this compound:',
 ];
-const answerType = ref(0);
+const answerType = ref(FORMULA);
 // const aboutTitle = ref(questionTexts[answerType.value]);
 const panelTitle = ref("Question 1 of 20");
 
-const isGiveupVisble = ref(false);
-
-const bodyText = ref('');
+const correctAnswer = ref('');
 const inputAnswer = ref<HTMLInputElement | null>(null);
 
+const isGiveupVisble = ref(false);
+
+// ========  Event Handler Methods ======== //
 //detect F1 keypress
-function handleKeydown(event: KeyboardEvent) {
+function handleFNKeydown(event: KeyboardEvent) {
     if (event.key === 'F1') {
         event.preventDefault(); // Prevent the default help action
         showHelp();
@@ -58,42 +64,11 @@ function handleInputKey(event: KeyboardEvent) {
 
     // Set the value of the input element
     if (inputAnswer.value) {
-        inputAnswer.value.value = toSubscriptUnicode(inputAnswer.value.value);
+        inputAnswer.value.value = toSubscript(inputAnswer.value.value);
     }
-
-}
-function showHelp() {
-    // This function can be used to show help or instructions
-    window.alert('Help: Enter the name or formula of the compound as prompted. Use the buttons to check your answer or give up.');
 }
 
-
-function chooseAnswerType() {
-    if (appState.questionOptions & 512) answerType.value = 0; //name
-    if (appState.questionOptions & 1024) answerType.value = 1; //formula
-
-    if (appState.questionOptions & 1536) {
-        //50-50 random chance of 0 or 1
-        answerType.value = Math.random() < 0.5 ? 0 : 1;
-    }
-    // panelTitle.value = questionTexts[answerType.value];
-    // panelTitle.value = "testing";
-}
-
-function setText() {
-    bodyText.value = `<span class="text-sm">The correct answer is:</span><br><span class="text-emph">${questionStore.question.name} <br> ${questionStore.question.formula}</span>`;
-}
-
-function giveUp() {
-    isGiveupVisble.value = true;
-}
-
-function checkAnswer() {
-
-}
-
-
-function toSubscriptUnicode(number: string): string {
+function toSubscript(number: string): string {
     const subscriptMap = {
         '0': '\u2080', '1': '\u2081', '2': '\u2082', '3': '\u2083', '4': '\u2084',
         '5': '\u2085', '6': '\u2086', '7': '\u2087', '8': '\u2088', '9': '\u2089'
@@ -102,21 +77,84 @@ function toSubscriptUnicode(number: string): string {
         subscriptMap[digit as keyof typeof subscriptMap]
         || digit).join('');
 }
+// ======== Methods ======== //
 
+function showHelp() {
+    // This function can be used to show help or instructions
+    // window.alert('Help: Enter the name or formula of the compound as prompted. Use the buttons to check your answer or give up.');
+    let altName = '';
+    if (questionStore.question.alternativeName) { //This only happens for complex covalent
+        altName = questionStore.question.alternativeName;
+    }
+    let text = "The correct answer is: " + questionStore.question.name + " = " + toSubscript(questionStore.question.formula)
+    if (altName) {
+        text += `\n\nAlternative name: ${altName}`;
+    }
+    window.alert(text)
+}
+
+function chooseAnswerType() {
+    if (appState.questionOptions & 512) answerType.value = NAME;
+    if (appState.questionOptions & 1024) answerType.value = FORMULA
+
+    if (appState.questionOptions & 1536) {
+        //50-50 random chance of 0 or 1
+        answerType.value = Math.random() < 0.5 ? NAME : FORMULA
+    }
+    // panelTitle.value = questionTexts[answerType.value];
+}
+
+function setAnswerText() {
+    const formula = toSubscript(questionStore.question.formula);
+    let text = `<span class="text-sm">The correct answer is:</span><br>
+        <span class="text-emph">${questionStore.question.name} <br>
+         ${formula}</span><br>`;
+
+    if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) {
+        const altName = questionStore.question.alternativeName;
+        if (altName) text += `<span class="font-bold">Alternative name: ${altName}</span>`;
+    }
+    correctAnswer.value = text;
+}
+
+function showGiveUp() {
+    isGiveupVisble.value = true;
+    //Add question to list of wrong questions
+    questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
+}
+function hideGiveUp() {
+    isGiveupVisble.value = false;
+    //Generate next question
+    appState.state = 'GENERATE_QUESTION';
+}
+
+function checkAnswer() {
+
+}
+
+//Watch for changes in the questionStore.question
+watch(() => questionStore.question.name, (newQuestion) => {
+    if (newQuestion) {
+        setAnswerText();
+        panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
+    }
+}, { immediate: true });
 
 onMounted(() => {
-    document.addEventListener('keydown', handleKeydown);
+    document.addEventListener('keydown', handleFNKeydown);
 
     if (inputAnswer.value) {
         inputAnswer.value.addEventListener('keyup', handleInputKey);
     }
 
     chooseAnswerType();
-    setText();
+    setAnswerText();
+
+    panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
 });
 
 onUnmounted(() => {
-    document.removeEventListener('keydown', handleKeydown);
+    document.removeEventListener('keydown', handleFNKeydown);
     if (inputAnswer.value) {
         inputAnswer.value.removeEventListener('keyup', handleInputKey);
     }
@@ -140,7 +178,7 @@ onUnmounted(() => {
                     id="inputAnswer" ref="inputAnswer" autofocus />
             </div>
             <div class="mt-8 flex flex-grow justify-between">
-                <button type="button" class="Xw-full btnOK !bg-orange-300" @click="giveUp">
+                <button type="button" class="Xw-full btnOK !bg-orange-300" @click="showGiveUp">
                     &nbsp;&nbsp;I Give Up&nbsp;&nbsp;</button>
                 <button type="button" class="Xw-full btnOK !bg-emerald-300" @click="checkAnswer">Check Answer</button>
             </div>
@@ -151,7 +189,7 @@ onUnmounted(() => {
     <teleport to="body">
         <!-- Nothing else can be in here or it will no longer center -->
         <div v-if="isGiveupVisble" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="bodyText" @closePanel="isGiveupVisble = false">
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="correctAnswer" @closePanel="hideGiveUp">
                 Correct Answer
             </SimplePanel>
         </div>

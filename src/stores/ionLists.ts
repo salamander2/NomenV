@@ -56,7 +56,7 @@ export const useIonListsStore = defineStore('ionLists', () => {
     }*/
 
     // function $addIon(name: string, formula: string, charge: number, type: number) {
-    function $addIon(type: number, line: string) {
+    function addIon(type: number, line: string) {
         // Parse the line into name, formula, charge
         const parts = line.split(',');
         const name = parts[0].trim();
@@ -128,7 +128,7 @@ export const useIonListsStore = defineStore('ionLists', () => {
     }
 
     //get a list of all ions of a specific type
-    function $getListByType(type: number) {
+    function getListByType(type: number) {
         if (type < 0 || type >= ionTypes.length) {
             // console.error('Invalid ion type:', type) //this is intentional sometimes, in order to get an empty ion object
             return []
@@ -154,8 +154,8 @@ export const useIonListsStore = defineStore('ionLists', () => {
     /* Get a random ion from the specified list of ions.
     Return an ARRAY -- I should have made this a Tuple.
     The array was not working with typescript, so I made it a object */
-    function $getRandomIon(type: number): Ion {
-        const list = $getListByType(type)
+    function getRandomIon(type: number): Ion {
+        const list = getListByType(type)
         if (list.length === 0) {
             return $getEmptyIon();
         }
@@ -202,5 +202,5 @@ export const useIonListsStore = defineStore('ionLists', () => {
         }
     }
 
-    return { lists, ionTypes, $addIon, $getRandomIon, $getEmptyIon, $getListByType }
+    return { lists, ionTypes, addIon, getRandomIon, $getEmptyIon, getListByType }
 })
