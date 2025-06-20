@@ -21,19 +21,43 @@ const questionListsStore = useQuestionListsStore();
 // emit('closePanel');
 // };
 
+/*
+    This file needs a lot of fixing. It's really messed up. It's too complicated and needs to be simplified.
+    Too many things that are error prone.
+
+    modals: isGiveUpVisible,
+            isCorrectVisible
+
+            Help modals
+
+    variables for text:
+            questionTexts -- the question that is asked
+            answerText -- created by setAnswerText
+            successText -- when you get the answer correct (Well done)
+            failureText -- when you get the answer wrong (INCORRECT! (Check spelling) Try again.)
+*/
+
 // ========  Constants and Data ======== //
 const questionTexts = [
     'Enter the formula for this compound:',
     'Enter the name for this compound:',
 ];
-const answerType = ref(FORMULA);
 // const aboutTitle = ref(questionTexts[answerType.value]);
 const panelTitle = ref("Question 1 of 20");
 
-const correctAnswer = ref('');
+const answerText = ref('');
+const resultText = ref('');
+const successText = '<span class="text-lg font-bold text-green-700 uppercase">Correct!</span><br>' +
+    '<span class="text-gray-800 text-base">Well done.</span><br>';
+const failureText = '<span class="text-lg font-bold text-red-700 uppercase">Incorrect!</span><br>' +
+    '<span class="text-gray-800 text-base">Check spelling and try again.</span><br>';
+
 const inputAnswer = ref<HTMLInputElement | null>(null);
 
 const isGiveupVisble = ref(false);
+const isResultVisible = ref(false);
+const answerType = ref(NAME);
+const formulaSub = ref('');
 
 // ========  Event Handler Methods ======== //
 //detect F1 keypress
@@ -77,6 +101,7 @@ function toSubscript(number: string): string {
         subscriptMap[digit as keyof typeof subscriptMap]
         || digit).join('');
 }
+
 // ======== Methods ======== //
 
 function showHelp() {
@@ -93,28 +118,17 @@ function showHelp() {
     window.alert(text)
 }
 
-function chooseAnswerType() {
-    if (appState.questionOptions & 512) answerType.value = NAME;
-    if (appState.questionOptions & 1024) answerType.value = FORMULA
-
-    if (appState.questionOptions & 1536) {
-        //50-50 random chance of 0 or 1
-        answerType.value = Math.random() < 0.5 ? NAME : FORMULA
-    }
-    // panelTitle.value = questionTexts[answerType.value];
-}
-
 function setAnswerText() {
-    const formula = toSubscript(questionStore.question.formula);
-    let text = `<span class="text-sm">The correct answer is:</span><br>
-        <span class="text-emph">${questionStore.question.name} <br>
-         ${formula}</span><br>`;
+    formulaSub.value = toSubscript(questionStore.question.formula);
+    let text = `<span class="text-base">The correct answer is:</span><br>
+        <span class="text-emph text-base">${questionStore.question.name} <br>
+         ${formulaSub.value}</span><br>`;
 
     if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) {
         const altName = questionStore.question.alternativeName;
         if (altName) text += `<span class="font-bold">Alternative name: ${altName}</span>`;
     }
-    correctAnswer.value = text;
+    answerText.value = text;
 }
 
 function showGiveUp() {
@@ -122,21 +136,68 @@ function showGiveUp() {
     //Add question to list of wrong questions
     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
 }
-function hideGiveUp() {
+function nextQuestion() {
     isGiveupVisble.value = false;
-    //Generate next question
-    appState.state = 'GENERATE_QUESTION';
+    isResultVisible.value = false;
+    if (resultText.value === successText) {
+        //Generate next question
+        appState.state = 'GENERATE_QUESTION';
+    }
+    else {
+        if (inputAnswer.value) {
+            inputAnswer.value.focus();
+        }
+    }
 }
 
 function checkAnswer() {
 
+    const answer = inputAnswer.value ? inputAnswer.value.value.trim() : '';
+    if (answerType.value === NAME) {
+
+        if (answer.toLowerCase() === questionStore.question.name.toLowerCase()) {
+            resultText.value = successText;
+            isResultVisible.value = true;
+            questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
+        } else {
+            resultText.value = failureText;
+            isResultVisible.value = true;
+            // questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
+        }
+
+    } else {
+        // Check if the answer matches the formula
+        // if (answer.toLowerCase() === questionStore.question.formula.toLowerCase()) {
+        //     // Correct answer
+        //     window.alert('Correct!');
+        //     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
+        //     nextQuestion();
+        // } else {
+        //     // Incorrect answer
+        //     window.alert(`Incorrect! The correct answer is: ${questionStore.question.formula}`);
+        //     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
+        // }
+    }
+
 }
 
+function closePanel() {
+    appState.state = 'SETUP_COMPLETE';
+}
+
+// =========== Watchers and Lifecycle Hooks =========== //
 //Watch for changes in the questionStore.question
 watch(() => questionStore.question.name, (newQuestion) => {
     if (newQuestion) {
+        answerType.value = questionStore.question.answerType;
         setAnswerText();
+
         panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
+        //clear the input field
+        if (inputAnswer.value) {
+            inputAnswer.value.value = '';
+            inputAnswer.value.focus();
+        }
     }
 }, { immediate: true });
 
@@ -147,7 +208,7 @@ onMounted(() => {
         inputAnswer.value.addEventListener('keyup', handleInputKey);
     }
 
-    chooseAnswerType();
+    answerType.value = questionStore.question.answerType;
     setAnswerText();
 
     panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
@@ -167,14 +228,17 @@ onUnmounted(() => {
         <div class="title">
             {{ panelTitle }}
             <button class="btnQ" @click="showHelp">?</button>
-            <button class="btnX" @click="$emit('closePanel')">&times;</button>
+            <button class="btnX" @click="closePanel">&times;</button>
         </div>
         <div class="body">
             <p class="italic font-bold text-orange-800">{{ questionTexts[answerType] }}</p>
-            <p class="font-bold text-blue-900 text-lg">{{ questionStore.question.name }}</p>
+            <p class="font-bold text-blue-900 text-lg">
+                <!-- {{ answerType ? questionStore.question.formula : questionStore.question.name }} -->
+                {{ answerType ? formulaSub : questionStore.question.name }}
+            </p>
             <div class="mt-2 mb-4">
                 <div class="text-left text-sm text-gray-600">Enter your answer:</div>
-                <input type="text" class="w-full border text-black bg-white Xpl-2 text-bold text-center"
+                <input type="text" class="w-full border text-black text-lg bg-white Xpl-2 text-bold text-center"
                     id="inputAnswer" ref="inputAnswer" autofocus />
             </div>
             <div class="mt-8 flex flex-grow justify-between">
@@ -189,8 +253,13 @@ onUnmounted(() => {
     <teleport to="body">
         <!-- Nothing else can be in here or it will no longer center -->
         <div v-if="isGiveupVisble" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="correctAnswer" @closePanel="hideGiveUp">
-                Correct Answer
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="answerText" @closePanel="nextQuestion">
+                Answer
+            </SimplePanel>
+        </div>
+        <div v-if="isResultVisible" class="modal-mask">
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="nextQuestion">
+                Result
             </SimplePanel>
         </div>
     </teleport>
