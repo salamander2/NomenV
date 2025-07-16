@@ -32,10 +32,12 @@ const questionListsStore = useQuestionListsStore();
 
     variables for text:
             questionTexts -- the question that is asked
-            answerText -- created by setAnswerText
-            successText -- when you get the answer correct (Well done)
-            failureText -- when you get the answer wrong (INCORRECT! (Check spelling) Try again.)
+            answerText    -- when you give up. Created by setAnswerText
+            successText   -- when you get the answer correct (Well done)
+            failureText   -- when you get the answer wrong (INCORRECT! (Check spelling) Try again.)
 */
+//TODO: separate checkAnswer into two functions: checkNameAnswer and checkFormulaAnswer
+//TODO: should save question be moved to nextQuestion()?
 
 // ========  Constants and Data ======== //
 const questionTexts = [
@@ -55,7 +57,8 @@ const failureText = '<span class="text-lg font-bold text-red-700 uppercase">Inco
 const inputAnswer = ref<HTMLInputElement | null>(null);
 
 const isGiveupVisble = ref(false);
-const isResultVisible = ref(false);
+const isCorrectVisible = ref(false);
+const isWrongVisible = ref(false);
 const answerType = ref(NAME);
 const formulaSub = ref('');
 
@@ -136,18 +139,21 @@ function showGiveUp() {
     //Add question to list of wrong questions
     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
 }
+function afterWrongModal() {
+    isWrongVisible.value = false;
+
+    if (inputAnswer.value) {
+        inputAnswer.value.focus();
+    }
+}
 function nextQuestion() {
     isGiveupVisble.value = false;
-    isResultVisible.value = false;
-    if (resultText.value === successText) {
-        //Generate next question
-        appState.state = 'GENERATE_QUESTION';
-    }
-    else {
-        if (inputAnswer.value) {
-            inputAnswer.value.focus();
-        }
-    }
+    isCorrectVisible.value = false;
+
+    questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
+
+    //Generate next question
+    appState.state = 'GENERATE_QUESTION';
 }
 
 function checkAnswer() {
@@ -155,28 +161,53 @@ function checkAnswer() {
     const answer = inputAnswer.value ? inputAnswer.value.value.trim() : '';
     if (answerType.value === NAME) {
 
-        if (answer.toLowerCase() === questionStore.question.name.toLowerCase()) {
+        // Check if the answer matches the name/altname for complex covalent compounds
+        if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) {
+
+            if (answer.toLowerCase() === questionStore.question.name.toLowerCase() || answer.toLowerCase() === questionStore.question.alternativeName?.toLowerCase()) {
+                //If there is an alternative name, add it to resultText
+                let addText = '';
+                if (questionStore.question.alternativeName) {
+                    addText = `<span class="font-bold">Name: ${questionStore.question.name}</span><br>`;
+                    addText += `<span class="font-bold">Alternative name: ${questionStore.question.alternativeName}</span>`;
+                }
+                resultText.value = successText + addText;
+                isCorrectVisible.value = true;
+            }
+            //Incorrect
+            else {
+                resultText.value = failureText;
+                isWrongVisible.value = true;
+            }
+        }
+        //All other correct answers
+        else if (answer.toLowerCase() === questionStore.question.name.toLowerCase()) {
             resultText.value = successText;
-            isResultVisible.value = true;
-            questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
-        } else {
+            isCorrectVisible.value = true;
+        }
+        //Incorrect
+        else {
             resultText.value = failureText;
-            isResultVisible.value = true;
-            // questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
+            isWrongVisible.value = true;
         }
 
-    } else {
+    }
+
+    if (answerType.value == FORMULA) {
+        //change all subscripts back to normal text
+
+        console.log('Checking formula answer:', answer);
+        console.log('Correct formula:', questionStore.question.formula);
+
         // Check if the answer matches the formula
-        // if (answer.toLowerCase() === questionStore.question.formula.toLowerCase()) {
-        //     // Correct answer
-        //     window.alert('Correct!');
-        //     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
-        //     nextQuestion();
-        // } else {
-        //     // Incorrect answer
-        //     window.alert(`Incorrect! The correct answer is: ${questionStore.question.formula}`);
-        //     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
-        // }
+        if (answer.toLowerCase() === questionStore.question.formula.toLowerCase()) {
+            resultText.value = successText;
+            isCorrectVisible.value = true;
+        } else {
+            // Incorrect answer
+            resultText.value = failureText;
+            isWrongVisible.value = true;
+        }
     }
 
 }
@@ -257,8 +288,13 @@ onUnmounted(() => {
                 Answer
             </SimplePanel>
         </div>
-        <div v-if="isResultVisible" class="modal-mask">
+        <div v-if="isCorrectVisible" class="modal-mask">
             <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="nextQuestion">
+                Result
+            </SimplePanel>
+        </div>
+        <div v-if="isWrongVisible" class="modal-mask">
+            <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="afterWrongModal">
                 Result
             </SimplePanel>
         </div>
