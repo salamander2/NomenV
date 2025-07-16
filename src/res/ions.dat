@@ -149,6 +149,25 @@ dinitrogen trioxide,N2O3
 dinitrogen tetroxide,N2O4
 dinitrogen pentoxide,N2O5
 dichlorine heptoxide,Cl2O7
-chlorine monofluoride, ClF
+chlorine monofluoride,ClF
 
-;[Acids]
+[Acids]
+hydrofluoric acid,HF
+hydrochloric acid,HCl
+hydrobromic acid,HBr
+hydroiodic acid,HI
+
+sulfuric acid,H2SO4
+sulfurous acid,H2SO3
+nitric acid,HNO3
+nitrous acid,HNO2
+phosphoric acid,H3PO4
+phosphorous acid,H3PO3
+carbonic acid,H2CO3
+
+acetic acid,HC2H3O2
+
+perchloric acid,HClO4
+chloric acid,HClO3
+chlorous acid,HClO2
+hypochlorous acid,HClO

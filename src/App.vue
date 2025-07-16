@@ -43,8 +43,14 @@ onMounted(() => {
         if (line.charAt(0) == '[' && line.charAt(line.length - 1) == ']') {
             ionType = ionLists.ionTypes.indexOf(line.toLowerCase());
             // console.log(ionType + " " + line);
+            if (ionType < 0) {
+                console.log("Error: Invalid Question/Ion Type :" + line);
+            }
         } else {
             // console.log(ionType + " " + line);
+            if (ionType < 0) {
+                return;
+            }
             ionLists.addIon(ionType, line);
         }
     });
@@ -53,7 +59,7 @@ onMounted(() => {
     //     let ion = ionLists.getRandomIon(1);
     //     if (ion[0] == 'manganese') console.log(JSON.stringify(ion));
     // }
-    console.log(JSON.stringify(ionLists.getListByType(8)));
+    // console.log(JSON.stringify(ionLists.getListByType(8)));
 
     appState.state = 'SETUP_COMPLETE';
 });

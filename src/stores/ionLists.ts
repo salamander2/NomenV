@@ -48,6 +48,8 @@ export const useIonListsStore = defineStore('ionLists', () => {
         '[anions-other]', //6
         '[covalent-simple]', //7
         '[covalent-complex]', //8
+        '[acids]', //9
+
     ]
 
     /*
@@ -73,7 +75,8 @@ export const useIonListsStore = defineStore('ionLists', () => {
             charge = parseInt(parts[3].trim());
             chargeN = parseInt(parts[4].trim());
             electronegativity = parseFloat(parts[5].trim());
-
+        } else if (type == ionTypes.indexOf('[acids]')) {
+            //All it has is [0] and [1] for name and formula
         } else {
             charge = parseInt(parts[2].trim())
             if (isNaN(charge)) {
