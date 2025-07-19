@@ -105,6 +105,17 @@ function toSubscript(number: string): string {
         || digit).join('');
 }
 
+function fromSubscript(text: string): string {
+    const subscripts = [
+        '\u2080', '\u2081', '\u2082', '\u2083', '\u2084',
+        '\u2085', '\u2086', '\u2087', '\u2088', '\u2089'
+    ];
+    return text.split('').map(char => {
+        const index = subscripts.indexOf(char);
+        return index !== -1 ? String(index) : char;
+    }).join('');
+}
+
 // ======== Methods ======== //
 
 function showHelp() {
@@ -149,6 +160,9 @@ function afterWrongModal() {
 function nextQuestion() {
     isGiveupVisble.value = false;
     isCorrectVisible.value = false;
+    if (inputAnswer.value) {
+        inputAnswer.value.blur(); // Remove focus from the input field
+    }
 
     questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
 
@@ -159,30 +173,27 @@ function nextQuestion() {
 function checkAnswer() {
 
     const answer = inputAnswer.value ? inputAnswer.value.value.trim() : '';
-    if (answerType.value === NAME) {
 
-        // Check if the answer matches the name/altname for complex covalent compounds
-        if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) {
+    if (answerType.value === NAME) checkNameAnswer(answer);
+    if (answerType.value === FORMULA) checkFormulaAnswer(answer);
 
-            if (answer.toLowerCase() === questionStore.question.name.toLowerCase() || answer.toLowerCase() === questionStore.question.alternativeName?.toLowerCase()) {
-                //If there is an alternative name, add it to resultText
-                let addText = '';
-                if (questionStore.question.alternativeName) {
-                    addText = `<span class="font-bold">Name: ${questionStore.question.name}</span><br>`;
-                    addText += `<span class="font-bold">Alternative name: ${questionStore.question.alternativeName}</span>`;
-                }
-                resultText.value = successText + addText;
-                isCorrectVisible.value = true;
+}
+
+function checkNameAnswer(answer: string) {
+
+    answer = answer.toLowerCase();
+
+    // Check if the answer matches the name/altname for complex covalent compounds
+    if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) {
+
+        if (answer === questionStore.question.name.toLowerCase() || answer === questionStore.question.alternativeName?.toLowerCase()) {
+            //If there is an alternative name, add it to resultText
+            let addText = '';
+            if (questionStore.question.alternativeName) {
+                addText = `<span class="font-bold">Name: ${questionStore.question.name}</span><br>`;
+                addText += `<span class="font-bold">Alternative name: ${questionStore.question.alternativeName}</span>`;
             }
-            //Incorrect
-            else {
-                resultText.value = failureText;
-                isWrongVisible.value = true;
-            }
-        }
-        //All other correct answers
-        else if (answer.toLowerCase() === questionStore.question.name.toLowerCase()) {
-            resultText.value = successText;
+            resultText.value = successText + addText;
             isCorrectVisible.value = true;
         }
         //Incorrect
@@ -190,27 +201,37 @@ function checkAnswer() {
             resultText.value = failureText;
             isWrongVisible.value = true;
         }
-
     }
-
-    if (answerType.value == FORMULA) {
-        //change all subscripts back to normal text
-
-        console.log('Checking formula answer:', answer);
-        console.log('Correct formula:', questionStore.question.formula);
-
-        // Check if the answer matches the formula
-        if (answer.toLowerCase() === questionStore.question.formula.toLowerCase()) {
-            resultText.value = successText;
-            isCorrectVisible.value = true;
-        } else {
-            // Incorrect answer
-            resultText.value = failureText;
-            isWrongVisible.value = true;
-        }
+    //All other correct answers
+    else if (answer === questionStore.question.name.toLowerCase()) {
+        resultText.value = successText;
+        isCorrectVisible.value = true;
     }
-
+    //Incorrect
+    else {
+        resultText.value = failureText;
+        isWrongVisible.value = true;
+    }
 }
+
+function checkFormulaAnswer(answer: string) {
+    //change all subscripts back to normal text
+    answer = fromSubscript(answer);
+
+    console.log('Checking formula answer:', answer);
+    console.log('Correct formula:', questionStore.question.formula);
+
+    // Check if the answer matches the formula
+    if (answer === questionStore.question.formula) {
+        resultText.value = successText;
+        isCorrectVisible.value = true;
+    } else {
+        // Incorrect answer
+        resultText.value = failureText;
+        isWrongVisible.value = true;
+    }
+}
+
 
 function closePanel() {
     appState.state = 'SETUP_COMPLETE';
