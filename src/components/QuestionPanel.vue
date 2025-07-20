@@ -84,10 +84,7 @@ function handleInputKey(event: KeyboardEvent) {
         checkAnswer();
     }
 
-    console.log('Input key:', event.key);
     inputAnswer.value = document.querySelector('#inputAnswer') as HTMLInputElement;
-
-    console.log('Input element:', inputAnswer.value?.value);
 
     // Set the value of the input element
     if (inputAnswer.value) {

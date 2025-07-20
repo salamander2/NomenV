@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
 /* This is a simple window. It uses CSS from index.html
   Usage:  <AWindow :bodytext="..." :closeBtnTop=T/F> {{ title_text }}</AWindow>
 
@@ -6,27 +7,54 @@
   It emits a "closePanel" event when the close button is clicked.
 */
 
-defineProps({
+const props = defineProps({
     bodyText: String,
     closeBtnTop: { type: Boolean, default: false }
 
 })
 const emit = defineEmits(['closePanel']);
 const closePanel = () => {
-    // Emit the closePanel event to the parent component
     emit('closePanel');
 };
+function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+        event.stopImmediatePropagation(); // Stop the event from propagating to any other listeners
+        // event.stopPropagation(); // Stop the event from propagating to parent components
+        event.preventDefault(); // Prevent default behavior (e.g., form submission)
+        closePanel();
+    }
+}
+
+// Make OK button have focus upon loading - so that you can press ENTER
+onMounted(() => {
+    //add key listener to document to close panel on Esc key
+    document.addEventListener('keydown', handleKeydown);
+
+    /* if (!props.closeBtnTop) {
+        const okButton = document.getElementById('modalBtnOK');
+        if (okButton) {
+            console.log('Setting focus to OK button');
+            (okButton as HTMLButtonElement).focus();
+        }
+    } */
+});
+onUnmounted(() => {
+    // Remove key listener from document
+    document.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <template>
     <div class="window">
         <div class="title">
             <slot />
-            <button v-if="closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
+            <button type="button" v-if="closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
         </div>
-        <!-- <div class="body">{{ bodyText }}</div> -->
         <div class="body" v-html="bodyText"></div>
-        <button v-if="!closeBtnTop" class="btnOK" @click="closePanel">OK</button>
+        <button v-if="!closeBtnTop" type="button" id="modalBtnOK" class="btnOK" @click="closePanel"
+            Xkeydown="handleKeydown">
+            OK
+        </button>
     </div>
 
 </template>
