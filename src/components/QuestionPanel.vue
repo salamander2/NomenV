@@ -40,7 +40,6 @@ const questionListsStore = useQuestionListsStore();
 //TODO: should save question be moved to nextQuestion()?
 
 // ========  Constants and Data ======== //
-const numberOfQuestions: number = 5;
 const questionTexts = [
     'Enter the formula for this compound:',
     'Enter the name for this compound:',
@@ -169,7 +168,7 @@ function nextQuestion() {
     }
 
     //When there have been 20 questions ...
-    if (questionListsStore.questionCounter >= numberOfQuestions - 1) {
+    if (questionListsStore.questionCounter >= questionListsStore.maxQuestions) {
         appState.state = 'PRINT_QUESTIONS';
         return;
     }
@@ -270,7 +269,7 @@ onMounted(() => {
     answerType.value = questionStore.question.answerType;
     setAnswerText();
 
-    panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
+    panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of ${questionListsStore.maxQuestions}`;
 });
 
 onUnmounted(() => {
@@ -297,7 +296,7 @@ onUnmounted(() => {
             </p>
             <div class="mt-2 mb-4">
                 <div class="text-left text-sm text-gray-600">Enter your answer:</div>
-                <input type="text" class="w-full border text-black text-lg bg-white Xpl-2 text-bold text-center"
+                <input type="text" class="w-full border text-black text-lg bg-white Xpl-2 font-bold text-center"
                     id="inputAnswer" ref="inputAnswer" autofocus />
             </div>
             <div class="mt-8 flex flex-grow justify-between">

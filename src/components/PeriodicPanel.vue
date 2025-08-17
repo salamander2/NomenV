@@ -49,7 +49,7 @@ const dragOnTouch = (e: TouchEvent) => {
         <div class="title">Periodic Table
             <button class="btnX" @click="$emit('closePeriodic')">&times;</button>
         </div>
-        <div v-if="isDragging" class="text-red bold">Dragging</div>
+        <div v-if="isDragging" class="text-red font-bold">Dragging</div>
         <img src="../res/periodictable.png" alt="Periodic Table" style="width:596px;height:365px">
     </div>
 </template>
