@@ -9,6 +9,7 @@ import OptionsPanel from '@/components/OptionsPanel.vue'
 import { CATION_SINGLE, CATION_MULTI, ANION_SIMPLE, ANION_OXYACID, ANION_DERIVATIVE, ANION_HYDROGEN, ANION_OTHER, COVALENT_SIMPLE, COVALENT_COMPLEX } from '@/constants.ts';
 import type { Ion } from '@/constants.ts';
 import QuestionPanel from './QuestionPanel.vue';
+import QuestionSummaryPanel from './QuestionSummaryPanel.vue';
 
 //GLobal Variables
 const FORMULA: number = 0;
@@ -21,14 +22,14 @@ const questionLists = useQuestionListsStore();
 
 watch(() => appState.state, (newValue: string, oldValue: string) => {
     switch (appState.state) {
-        // case 'SETUP':
-        //initialize the app
-        // console.log("Setting up the app...");
-        //load ions from file
-        // ionLists.$loadIonsFromFile();
-        //set the state to SETUP_COMPLETE
-        // appState.state = 'SETUP_COMPLETE';
-        // break;
+        case 'SETUP':
+            //initialize the app
+            // console.log("Setting up the app...");
+            //load ions from file
+            // ionLists.$loadIonsFromFile();
+            //set the state to SETUP_COMPLETE
+            // appState.state = 'SETUP_COMPLETE';
+            break;
         case 'SETUP_COMPLETE':
             //reset the question options
             appState.questionOptions = 0;
@@ -45,6 +46,9 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
         case 'QUESTION_GENERATED':
             appState.state = 'SHOW_QUESTION';
             // appState.state = 'OPTIONS';  //DEBUG
+            break;
+        case 'PRINT_QUESTIONS':
+            // questionLists.$printSummary();
             break;
     }
     // console.log(oldValue + " => " + newValue);
@@ -271,5 +275,6 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
     <!-- <h1>Nomenclature Quiz Program {{ appState.state }}</h1> -->
     <OptionsPanel v-if="appState.state === 'OPTIONS'" />
     <QuestionPanel v-if="appState.state === 'SHOW_QUESTION'" />
+    <QuestionSummaryPanel v-if="appState.state === 'PRINT_QUESTIONS'" />
 
 </template>

@@ -40,6 +40,7 @@ const questionListsStore = useQuestionListsStore();
 //TODO: should save question be moved to nextQuestion()?
 
 // ========  Constants and Data ======== //
+const numberOfQuestions: number = 5;
 const questionTexts = [
     'Enter the formula for this compound:',
     'Enter the name for this compound:',
@@ -59,6 +60,7 @@ const inputAnswer = ref<HTMLInputElement | null>(null);
 const isGiveupVisble = ref(false);
 const isCorrectVisible = ref(false);
 const isWrongVisible = ref(false);
+const isHelpRequested = ref(false);
 const answerType = ref(NAME);
 const formulaSub = ref('');
 
@@ -127,6 +129,7 @@ function showHelp() {
         text += `\n\nAlternative name: ${altName}`;
     }
     window.alert(text)
+    isHelpRequested.value = true;
 }
 
 function setAnswerText() {
@@ -144,8 +147,6 @@ function setAnswerText() {
 
 function showGiveUp() {
     isGiveupVisble.value = true;
-    //Add question to list of wrong questions
-    questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, false, false);
 }
 function afterWrongModal() {
     isWrongVisible.value = false;
@@ -154,16 +155,25 @@ function afterWrongModal() {
         inputAnswer.value.focus();
     }
 }
+
 function nextQuestion() {
+
+    questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, isCorrectVisible.value, isHelpRequested.value);
+
     isGiveupVisble.value = false;
     isCorrectVisible.value = false;
+    isHelpRequested.value = false;
+
     if (inputAnswer.value) {
         inputAnswer.value.blur(); // Remove focus from the input field
     }
 
-    questionListsStore.addQuestion(questionStore.question.name, questionStore.question.formula, true, false);
+    //When there have been 20 questions ...
+    if (questionListsStore.questionCounter >= numberOfQuestions - 1) {
+        appState.state = 'PRINT_QUESTIONS';
+        return;
+    }
 
-    //Generate next question
     appState.state = 'GENERATE_QUESTION';
 }
 
