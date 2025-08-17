@@ -169,7 +169,7 @@ function nextQuestion() {
 
     //When there have been 20 questions ...
     if (questionListsStore.questionCounter >= questionListsStore.maxQuestions) {
-        appState.state = 'PRINT_QUESTIONS';
+        appState.state = 'SUMMARY_RESULTS';
         return;
     }
 
@@ -240,7 +240,7 @@ function checkFormulaAnswer(answer: string) {
 
 
 function closePanel() {
-    appState.state = 'SETUP_COMPLETE';
+    appState.state = 'SUMMARY_RESULTS';
 }
 
 // =========== Watchers and Lifecycle Hooks =========== //
@@ -250,7 +250,7 @@ watch(() => questionStore.question.name, (newQuestion) => {
         answerType.value = questionStore.question.answerType;
         setAnswerText();
 
-        panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of 20`;
+        panelTitle.value = `Question ${questionListsStore.questionCounter + 1} of ${questionListsStore.maxQuestions}`;
         //clear the input field
         if (inputAnswer.value) {
             inputAnswer.value.value = '';

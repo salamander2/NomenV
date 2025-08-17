@@ -35,6 +35,8 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.questionOptions = 0;
             appState.state = 'OPTIONS';
             break;
+        case 'OPTIONS':
+            break;
         case 'OPTIONS_COMPLETE':
             questionLists.$clearQuestions();
             appState.state = 'GENERATE_QUESTION';
@@ -47,8 +49,12 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'SHOW_QUESTION';
             // appState.state = 'OPTIONS';  //DEBUG
             break;
-        case 'PRINT_QUESTIONS':
-            // questionLists.$printSummary();
+        case 'SHOW_QUESTION':
+            break;
+        case 'SUMMARY_RESULTS':
+            break;
+        case 'PRINT_PDF':
+            printPDF();
             break;
     }
     // console.log(oldValue + " => " + newValue);
@@ -268,6 +274,13 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
 
 }
 
+function printPDF() {
+    //get name using window alert
+    const name = window.prompt("Please enter your name:", "Default Name");
+
+    //generate PDF, then set state = "SETUP_COMPLETE"
+}
+
 </script>
 
 <template>
@@ -275,6 +288,6 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
     <!-- <h1>Nomenclature Quiz Program {{ appState.state }}</h1> -->
     <OptionsPanel v-if="appState.state === 'OPTIONS'" />
     <QuestionPanel v-if="appState.state === 'SHOW_QUESTION'" />
-    <QuestionSummaryPanel v-if="appState.state === 'PRINT_QUESTIONS'" />
+    <QuestionSummaryPanel v-if="appState.state === 'SUMMARY_RESULTS'" />
 
 </template>

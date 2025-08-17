@@ -70,25 +70,40 @@ function restart() {
     appState.state = "SETUP_COMPLETE";
 }
 
+function toSubscript(number: string): string {
+    const subscriptMap = {
+        '0': '\u2080', '1': '\u2081', '2': '\u2082', '3': '\u2083', '4': '\u2084',
+        '5': '\u2085', '6': '\u2086', '7': '\u2087', '8': '\u2088', '9': '\u2089'
+    };
+    return String(number).split('').map(digit =>
+        subscriptMap[digit as keyof typeof subscriptMap]
+        || digit).join('');
+}
+
+function printResults() {
+    appState.state = "PRINT_PDF";
+}
+
 </script>
 
 <template>
     <div class="window" style="background-color: #EEE; width: inherit;">
         <div class="title">Summary of Answers</div>
         <div class="body text-left">
-            <div class="text-base text-gray-800 font-bold bg-amber-100 p-1 mb-2">
-                Number of Questions: {{ questionListsStore.maxQuestions }}<br>
-                Score: {{ score }}% <span class="font-normal">&dagger;</span>
+            <div class="text-base text-gray-800 font-bold bg-amber-100 p-1">
+                <!-- Number of Questions: {{ questionListsStore.maxQuestions }}<br> -->
+                Number of Questions: {{ questionLists.correct.length + questionLists.wrong.length }}<br>
+                Score: <span style="font-size:120%">{{ score }}%</span> <span
+                    class="text-gray-600 font-normal">&ddagger;</span>
             </div>
-            <!-- Score: (correct + help/2 / number of questions) * 100 -->
-            <!--
-            <div class="text-left text-base text-indigo-800 pl-6 -indent-6"><b>Question Type(s):</b><br />
-                <span v-html="questionTypes"></span>
+            <div class="text-xs text-gray-600 mb-2">&ddagger;
+                score = [ #correct (without help) + &half; #correct (needed help) ] &divide; number of questions
             </div>
-            -->
+
             <div class="text-base text-indigo-800  pl-6 -indent-6 px-1"><span v-html="questionTypes"></span></div>
-            <div class="text-base text-fuchsia-900 pl-6 -indent-6 px-1"><b>Answer
-                    Type:</b><br />
+
+            <div class="text-base text-fuchsia-900 pl-6 -indent-6 px-1">
+                <b>Answer Type:</b><br />
                 {{ getAnswerType }}
             </div>
 
@@ -97,7 +112,7 @@ function restart() {
             <div class="my-1 text-base text-gray-800">
                 <div class="mt-1 text-green-800 font-bold">Questions Correct: {{ questionLists.correct.length }}</div>
                 <div class="ml-3" v-for="(question, index) in questionLists.correct" :key="index">
-                    {{ index + 1 }}. {{ question.name }} = {{ question.formula }}
+                    {{ index + 1 }}. {{ question.name }} = {{ toSubscript(question.formula) }}
                     <span v-if="question.neededHelp"> *</span>
                 </div>
                 <span class="text-xs text-gray-500">* indicates that help was needed to answer the
@@ -111,11 +126,9 @@ function restart() {
                 </div>
             </div>
             <hr class="my-2">
-            <span class="text-xs text-gray-600">&dagger; score = ( #correct (without help) + &half; #correct
-                (with help) ) &divide;
-                number of questions</span><br />
-            <button type="button" class="btnQ mt-1 bg-white">Print</button> -- (enter name)
+            <button type="button" class="btnQ mt-1 bg-white" @click="printResults">Print</button>
             <button type="button" class="btnX mt-2" @click="restart">Restart</button>
+            &nbsp;
         </div>
     </div>
 </template>
