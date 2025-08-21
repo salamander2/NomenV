@@ -45,9 +45,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          port: 22
+          port: ${{ secrets.SSH_PORT }}
           source: "./dist/assets"
-          target: "/usr/home/trader100/public_html/"
+          target: "/home/quarkphysics/nomenV/assets"
           rm: false
           debug: true
           strip_components: 1
