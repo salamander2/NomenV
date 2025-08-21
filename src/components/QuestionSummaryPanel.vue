@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+import { defineProps, defineExpose, computed } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
 import { ref } from 'vue';
+import { jsPDF } from "jspdf";
 import { useQuestionListsStore } from '@/stores/questionLists';
 
 //props
@@ -81,7 +82,33 @@ function toSubscript(number: string): string {
 }
 
 function printResults() {
-    appState.state = "PRINT_PDF";
+    //appState.state = "PRINT_PDF";
+    //get name using window alert
+    const name = window.prompt("Please enter your name:");
+
+    const doc = new jsPDF();
+    // doc.text("test test", 0, 10, { align: 'center' });
+    const pageWidth = doc.internal.pageSize.getWidth();
+
+    doc.setFontSize(32);
+    doc.text("Inorganic Nomenclature Quiz", pageWidth / 2, 20, { align: "center", });
+
+    // Change font and font size
+    doc.setFont("Times");
+    doc.setFontSize(20);
+    doc.text("Custom Font and Size", 10, 60);
+
+    doc.setFont("Helvetica");
+    doc.setFontSize(12);
+    doc.text("Number of Questions =", 20, 30);
+    doc.text("Score =", 20, 40);
+    // doc.text();
+    // doc.text();
+
+    doc.save()
+    return;
+
+    // appState.state = "SETUP_COMPLETE";
 }
 
 </script>
@@ -93,11 +120,11 @@ function printResults() {
             <div class="text-base text-gray-800 font-bold bg-amber-100 p-1">
                 <!-- Number of Questions: {{ questionListsStore.maxQuestions }}<br> -->
                 Number of Questions: {{ questionLists.correct.length + questionLists.wrong.length }}<br>
-                Score: <span style="font-size:120%">{{ score }}%</span> <span
-                    class="text-gray-600 font-normal">&ddagger;</span>
+                Score: <span style="font-size:120%">{{ score }}%</span>
+                <!-- <span class="text-gray-600 font-normal">&ddagger;</span> -->
             </div>
-            <div class="text-xs text-gray-600 mb-2">&ddagger;
-                score = [ #correct (without help) + &half; #correct (needed help) ] &divide; number of questions
+            <div class="text-xs text-gray-600 mb-2">
+                Score = [ #correct (without help) + &half; #correct (needed help) ] &divide; number of questions
             </div>
 
             <div class="text-base text-indigo-800  pl-6 -indent-6 px-1"><span v-html="questionTypes"></span></div>
@@ -122,7 +149,7 @@ function printResults() {
             <div class="my-1 text-base text-gray-800">
                 <div class="mt-1 text-red-700 font-bold">Questions Incorrect: {{ questionLists.wrong.length }}</div>
                 <div class="ml-3" v-for="(question, index) in questionLists.wrong" :key="index">
-                    {{ index + 1 }}. {{ question.name }} = {{ question.formula }}
+                    {{ index + 1 }}. {{ question.name }} = {{ toSubscript(question.formula) }}
                 </div>
             </div>
             <hr class="my-2">

@@ -53,9 +53,6 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             break;
         case 'SUMMARY_RESULTS':
             break;
-        case 'PRINT_PDF':
-            printPDF();
-            break;
     }
     // console.log(oldValue + " => " + newValue);
 });
@@ -272,13 +269,6 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
         questionStore.setQuestion(cation.name, cation.formula, true, isSimpleCovalent, cation, anion, answerType, cation.altName,);
     }
 
-}
-
-function printPDF() {
-    //get name using window alert
-    const name = window.prompt("Please enter your name:", "Default Name");
-
-    //generate PDF, then set state = "SETUP_COMPLETE"
 }
 
 </script>

@@ -1,0 +1,67 @@
+name: Deploy NomenV Application to Production Server
+
+on:
+  # NOT on pull requests -- it's a security risk since anyone can make a PR.
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+#          php-version: '8.3'
+          php-version: '8.2.9'
+          extensions: mbstring, xml, curl, zip, bcmath, gd, fileinfo, openssl, 
+          coverage: none
+
+#      - name: Install Composer dependencies
+#        run: composer install --no-dev --no-progress --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Install Node.js dependencies
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Build frontend assets
+        run: npm run build
+
+      - name: Deploy to production server
+        uses: appleboy/scp-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          port: 22
+          source: "./dist/assets"
+          target: "/usr/home/trader100/public_html/"
+          rm: false
+          debug: true
+          strip_components: 1
+
+# or build on server (deleting much above)
+        # script: |
+        #    cd /path/to/laravel
+        #    php artisan down
+        #    git pull
+        #    npm ci
+        #    npm run build
+        #    composer i --no-interaction -q --no-progress
+        #    php artisan migrate --force
+        #    php artisan optimize
+        #    php artisan up
+
+########################## END ###########################
