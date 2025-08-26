@@ -121,6 +121,8 @@ iodide,I,iodide,157,1,2.66
 [Covalent-complex]
 ;these may have an alternate name
 ;note: spelling: Sulfur, fluoride
+;boron nitride,BP,boron mononitride
+;boron phosphide,BP,boron monophosphide
 nitrogen trihydride,NH3,ammonia
 carbon monoxide,CO
 carbon tetrahydride,CH4,methane

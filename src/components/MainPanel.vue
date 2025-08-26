@@ -253,7 +253,7 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
             anionCount = cation.charge / gcd(cation.charge, anion.chargeN);
         }
 
-        //None are polyatomic. Some are still wrong: e.g. BN is boron nitride, not boron mononitride.
+        //None are polyatomic. Some are still wrong: e.g. BN is boron nitride, not boron mononitride, same as BP
         const formula = cation.formula + (cationCount === 1 ? '' : cationCount) + anion.formula + (anionCount === 1 ? '' : anionCount);
         const name = (cationCount > 1 ? Greek[cationCount] : '') + cation.name + " " + Greek[anionCount] + anion.altName;
         console.log("covalent formula: " + formula + " name: " + name);

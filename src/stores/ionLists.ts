@@ -114,6 +114,15 @@ export const useIonListsStore = defineStore('ionLists', () => {
         if (capitalLetters && capitalLetters.length > 1) {
             isPolyAtom = true
         }
+        //FIX for peroxide:  O2
+        if (!isPolyAtom) {
+            //if there is a number after the element, it is a polyatom (check last character of formula)
+            const lastChar = formula.charAt(formula.length - 1);
+            if (!isNaN(parseInt(lastChar))) {
+                isPolyAtom = true;
+            }
+        }
+
         //charge is for cation or anion
         //for covalent charge will be the + charge, and so multivalent will still work
         //altName is the altname for complex covalent or the -ide name for simple covalent

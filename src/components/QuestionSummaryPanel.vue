@@ -3,6 +3,7 @@ import { defineProps, defineExpose, computed } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
 import { ref } from 'vue';
 import { jsPDF } from "jspdf";
+import { font as deja_vu } from "@/assets/DejaVuSans-normal.js";
 import { useQuestionListsStore } from '@/stores/questionLists';
 
 //props
@@ -18,15 +19,29 @@ const questionListsStore = useQuestionListsStore();
 //variables
 const questionLists = questionListsStore.getQuestionLists();
 
+/* Return an object that is used both for display and PDF
+  header: Ionic / Covalent
+  data1: cation / covalent type
+  data2: if inonic [anion types]
+
+  in PrintPDF we can set the font and indenting.
+  in Question summary, we can do the same thing, using HTML/CSS
+  */
+
 const questionTypes = computed(() => {
+    const obj: { header: string; data1: string; data2: string[] } = { header: '', data1: '', data2: [] };
+
     let index = 0;
     if (appState.questionOptions & 128) index += 1
-    if (appState.questionOptions & 256) index += 2
+    if (appState.questionOptions & 256) index += 2;
+
     const covalentTypes = ['', 'Simple Covalent', 'Complex Covalent', 'Both Simple and Complex Covalent'][index];
 
     if (covalentTypes !== '') {
-        // return covalentTypes;
-        return `<b>Question Type: Covalent</b> <br> ${covalentTypes}`;
+        obj.header = 'Covalent';
+        obj.data1 = covalentTypes;
+        return obj;
+        // return `<b>Question Type: Covalent</b> <br> ${covalentTypes}`;
     }
     //Now determine ionic types
     index = 0;
@@ -41,12 +56,19 @@ const questionTypes = computed(() => {
     if (appState.questionOptions & 32) anionTypes += 'H+ Polyatomic Ions, ';
     if (appState.questionOptions & 64) anionTypes += 'Other Polyatomic Ions, ';
     if (anionTypes.endsWith(', ')) anionTypes = anionTypes.slice(0, -2); //remove trailing comma and space
-    //replace ", " with "<br>"
-    anionTypes = anionTypes.replace(/, /g, '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
     if (anionTypes === '') anionTypes = 'Simple Ions'; //default to simple ions if no anion type selected
 
-    const text = "<b>Question Type: Ionic</b>";
-    return `${text}<br> (+) ${cationTypes} <br> (&ndash;) ${anionTypes}`;
+    anionTypes = "(–) " + anionTypes;
+    //replace ", " with "<br>"
+    // anionTypes = anionTypes.replace(/, /g, '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+
+    // const text = "<b>Question Type: Ionic</b>";
+    obj.header = "Ionic";
+    obj.data1 = "(+) " + cationTypes;
+    // obj.data2 = [anionTypes];
+    obj.data2 = anionTypes.split(', ');
+    // return `${text}<br> (+) ${cationTypes} <br> (&ndash;) ${anionTypes}`;
+    return obj;
 });
 
 //Using logic from MainPanel->createQuestions and binary values from OptionsPanel
@@ -81,30 +103,117 @@ function toSubscript(number: string): string {
         || digit).join('');
 }
 
+
 function printResults() {
+
     //appState.state = "PRINT_PDF";
-    //get name using window alert
     const name = window.prompt("Please enter your name:");
+    const finalName = name && name.trim() !== "" ? name : "?";
 
     const doc = new jsPDF();
-    // doc.text("test test", 0, 10, { align: 'center' });
+    doc.addFileToVFS('DejaVuSans-normal.ttf', deja_vu);
+    doc.addFont('DejaVuSans-normal.ttf', 'DejaVuSans', 'normal');
+
     const pageWidth = doc.internal.pageSize.getWidth();
-
-    doc.setFontSize(32);
-    doc.text("Inorganic Nomenclature Quiz", pageWidth / 2, 20, { align: "center", });
-
-    // Change font and font size
+    let y = 20;
     doc.setFont("Times");
-    doc.setFontSize(20);
-    doc.text("Custom Font and Size", 10, 60);
+    doc.setFontSize(32);
+    doc.text("Inorganic Nomenclature Quiz", pageWidth / 2, y, { align: "center", }); y += 8;
+    doc.setFontSize(12);
+    doc.setTextColor(90, 90, 90);
+    doc.text("\u00A9 Michael Harwood 2025", pageWidth / 2, y, { align: "center", }); y += 8;
+
+    doc.setFillColor(255, 255, 234);
+    doc.setDrawColor(128, 128, 128); // gray border
+    doc.setLineWidth(0.5);
+    doc.rect(18, y, pageWidth - 40 + 2, 35, 'FD');
 
     doc.setFont("Helvetica");
-    doc.setFontSize(12);
-    doc.text("Number of Questions =", 20, 30);
-    doc.text("Score =", 20, 40);
-    // doc.text();
-    // doc.text();
+    doc.setFontSize(20);
+    doc.text(`Name: ${finalName}`, 22, y + 10);
+    doc.text(`Number of Questions: ${questionLists.correct.length + questionLists.wrong.length}`, 22, y + 20);
+    const tempScore = score.value;
+    doc.text(`Score: ${tempScore}%`, 22, y + 30);
+    y += 43;
 
+    doc.setFontSize(13);
+    doc.text("Score = [ #correct (without help) + ½ #correct (needed help) ] ÷ number of questions", 18, y); y += 13;
+
+    //Question types
+    doc.setTextColor(0, 0, 100);
+    doc.setFontSize(18);
+    doc.setFont('Helvetica', '', 'bold');
+
+    // doc.text(questionTypes.value, 22, 90);
+    doc.text("Question Type: " + questionTypes.value.header, 20, y); y += 10;
+    doc.setFont('Helvetica', 'normal');
+    doc.text(questionTypes.value.data1, 20, y); y += 8;
+    for (let i = 0; i < questionTypes.value.data2.length; i++) {
+        if (i == 0) {
+            doc.text(questionTypes.value.data2[i], 20, y); y += 8;
+        } else {
+            doc.text(questionTypes.value.data2[i], 30, y); y += 8;
+        }
+    }
+    y += 5;
+
+    doc.setTextColor(100, 0, 100);
+    doc.setFont('Helvetica', 'bold');
+    doc.text("Answer Type:", 20, y); y += 10;
+    doc.setFont('Helvetica', 'normal');
+    doc.text(getAnswerType.value, 30, y); y += 10;
+
+    doc.line(20, y, pageWidth - 20, y); y += 10;
+
+    doc.setTextColor(0, 100, 0);
+    doc.setFont('Helvetica', '', 'bold');
+    doc.text('Questions Correct: ' + questionLists.correct.length, 20, y); y += 10;
+
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+
+    doc.setFont('DejaVuSans', 'normal'); //needed for subscripts
+    // doc.text("H\u2082O", 20, 20);
+    for (let i = 0; i < questionLists.correct.length; i++) {
+        const question = questionLists.correct[i];
+        let text = `${i + 1}. ${question.name} = ${toSubscript(question.formula)}`;
+        if (question.neededHelp) text += " *";
+        doc.text(text, 25, y);
+        y += 8; // Move down for next question
+    }
+
+    // Add note about help
+    doc.setFontSize(12);
+    doc.setTextColor(80, 80, 80);
+    doc.text("* indicates that help was needed to answer the question", 25, y + 5); y += 15 + 5;
+
+
+    doc.setFontSize(18);
+    doc.setTextColor(100, 0, 0);
+    doc.setFont('Helvetica', '', 'bold');
+    doc.text('Questions Incorrect: ' + questionLists.wrong.length, 20, y); y += 10;
+
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('DejaVuSans', 'normal');
+    for (let i = 0; i < questionLists.wrong.length; i++) {
+        const question = questionLists.wrong[i];
+        const text = `${i + 1}. ${question.name} = ${toSubscript(question.formula)}`;
+        doc.text(text, 25, y);
+        y += 8; // Move down for next question
+    }
+
+    doc.line(20, y, pageWidth - 20, y); y += 10;
+    /*
+This program is written by
+Michael Harwood
+It is free for trial purposes, but you must pay the registration fee if you want to continue to use it.
+Contact 'harwood@quarkphysics.ca'
+for licensing information
+or see the webpage
+https://quarkphysics.ca/nomen
+
+    */
     doc.save()
     return;
 
@@ -123,15 +232,25 @@ function printResults() {
                 Score: <span style="font-size:120%">{{ score }}%</span>
                 <!-- <span class="text-gray-600 font-normal">&ddagger;</span> -->
             </div>
-            <div class="text-xs text-gray-600 mb-2">
+            <div class="text-xs text-gray-600 mb-2 pt-1">
                 Score = [ #correct (without help) + &half; #correct (needed help) ] &divide; number of questions
             </div>
 
-            <div class="text-base text-indigo-800  pl-6 -indent-6 px-1"><span v-html="questionTypes"></span></div>
+            <!-- <div class="text-base text-indigo-800  pl-6 -indent-6 px-1"><span v-html="questionTypes"></span></div> -->
+            <div class="text-base text-indigo-800 px-1">
+                <b>Question Type: {{ questionTypes.header }}</b><br>
+                {{ questionTypes.data1 }}
+                <template v-if="questionTypes.header === 'Ionic'">
+                    <div v-for="(item, index) in questionTypes.data2" :key="index" class=""
+                        :class="index == 0 ? '' : 'pl-7'">
+                        {{ item }}
+                    </div>
+                </template>
+            </div>
 
-            <div class="text-base text-fuchsia-900 pl-6 -indent-6 px-1">
-                <b>Answer Type:</b><br />
-                {{ getAnswerType }}
+            <div class="text-base text-fuchsia-900 px-1">
+                <b>Answer Type:</b>
+                <div class="pl-7">{{ getAnswerType }}</div>
             </div>
 
             <hr class="my-2">
@@ -142,8 +261,7 @@ function printResults() {
                     {{ index + 1 }}. {{ question.name }} = {{ toSubscript(question.formula) }}
                     <span v-if="question.neededHelp"> *</span>
                 </div>
-                <span class="text-xs text-gray-500">* indicates that help was needed to answer the
-                    question</span>
+                <span class="text-xs text-gray-500">* indicates that help was needed to answer the question</span>
             </div>
 
             <div class="my-1 text-base text-gray-800">

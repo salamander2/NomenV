@@ -47,7 +47,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: ${{ secrets.SSH_PORT }}
           source: "./dist/assets"
-          target: "/home/quarkphysics/nomenV/assets"
+          target: "/home/quarkphysics/nomenV"
           rm: false
           debug: true
           strip_components: 1
