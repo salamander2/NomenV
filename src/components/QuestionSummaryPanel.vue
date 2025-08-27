@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { defineProps, defineExpose, computed } from 'vue';
+import { defineProps, computed } from 'vue';
 import { useAppStateStore } from '@/stores/appState';
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import { jsPDF } from "jspdf";
 import { font as deja_vu } from "@/assets/DejaVuSans-normal.js";
 import { useQuestionListsStore } from '@/stores/questionLists';
@@ -130,6 +130,7 @@ function printResults() {
 
     doc.setFont("Helvetica");
     doc.setFontSize(20);
+    //TODO make name bold or black
     doc.text(`Name: ${finalName}`, 22, y + 10);
     doc.text(`Number of Questions: ${questionLists.correct.length + questionLists.wrong.length}`, 22, y + 20);
     const tempScore = score.value;
@@ -204,14 +205,14 @@ function printResults() {
     }
 
     doc.line(20, y, pageWidth - 20, y); y += 10;
-    /*
-This program is written by
-Michael Harwood
+    doc.setFontSize(12);
+    doc.setTextColor(80, 80, 80);
+    doc.text("This program is free for trial purposes, but must be registered for continued use.", 20, y); y += 10;
+    doc.text("Contact harwood@quarkphysics.ca for licensing information.", 20, y); y += 10;
+
+    /* This program is written by Michael Harwood
 It is free for trial purposes, but you must pay the registration fee if you want to continue to use it.
-Contact 'harwood@quarkphysics.ca'
-for licensing information
-or see the webpage
-https://quarkphysics.ca/nomen
+Contact 'harwood@quarkphysics.ca' for licensing information or see the webpage https://quarkphysics.ca/nomen
 
     */
     doc.save()
