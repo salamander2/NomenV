@@ -215,7 +215,7 @@ It is free for trial purposes, but you must pay the registration fee if you want
 Contact 'harwood@quarkphysics.ca' for licensing information or see the webpage https://quarkphysics.ca/nomen
 
     */
-    doc.save()
+    doc.save("NomenclatureQuizSummary.pdf")
     return;
 
     // appState.state = "SETUP_COMPLETE";

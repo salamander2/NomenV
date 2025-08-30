@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import SimplePanel from './SimplePanel.vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useQuestionStore } from '@/stores/question';
 import { useQuestionListsStore } from '@/stores/questionLists';
+import { useIonListsStore } from '@/stores/ionLists';
 
 // import { defineComponent } from 'vue';
 // import { useStore } from 'vuex';
@@ -14,6 +17,7 @@ const NAME: number = 1;
 const appState = useAppStateStore();
 const questionStore = useQuestionStore();
 const questionListsStore = useQuestionListsStore();
+const ionListsStore = useIonListsStore();
 
 // const emit = defineEmits(['closePanel']);
 // const closePanel = () => {
@@ -68,15 +72,15 @@ const formulaSub = ref('');
 function handleFNKeydown(event: KeyboardEvent) {
     if (event.key === 'F1') {
         event.preventDefault(); // Prevent the default help action
-        showHelp();
+        showHelp(1);
     }
     if (event.key === 'F2') {
         event.preventDefault();
-        showHelp();
+        showHelp(2);
     }
     if (event.key === 'F3') {
         event.preventDefault();
-        showHelp();
+        showHelp(3);
     }
 }
 function handleInputKey(event: KeyboardEvent) {
@@ -116,19 +120,43 @@ function fromSubscript(text: string): string {
 
 // ======== Methods ======== //
 
-function showHelp() {
-    // This function can be used to show help or instructions
-    // window.alert('Help: Enter the name or formula of the compound as prompted. Use the buttons to check your answer or give up.');
-    let altName = '';
-    if (questionStore.question.alternativeName) { //This only happens for complex covalent
-        altName = questionStore.question.alternativeName;
+const questionTypes = computed(() => {
+
+    const lists = [];
+    if (appState.questionOptions & 1) {
+        lists.push(ionListsStore.getListByType(1));
     }
-    let text = "The correct answer is: " + questionStore.question.name + " = " + toSubscript(questionStore.question.formula)
-    if (altName) {
-        text += `\n\nAlternative name: ${altName}`;
+    if (appState.questionOptions & 2) {
+        lists.push(ionListsStore.getListByType(2));
     }
-    window.alert(text)
-    isHelpRequested.value = true;
+
+    return lists;
+});
+
+function showHelp(helpType: number) {
+    //List of Cations Used : F1
+    //List of Anions  Used : F2
+    //Help for this specific question : F3
+
+    if (helpType == 1) {
+        // console.log(JSON.stringify(questionTypes));
+        console.log(ionListsStore.getListByType(1));
+    }
+
+    if (helpType === 3) {
+
+        let altName = '';
+        if (questionStore.question.alternativeName) { //This only happens for complex covalent
+            altName = questionStore.question.alternativeName;
+        }
+        let text = "The correct answer is: " + questionStore.question.name + " = " + toSubscript(questionStore.question.formula)
+        if (altName) {
+            text += `\n\nAlternative name: ${altName}`;
+        }
+        window.alert(text)
+        isHelpRequested.value = true;
+        return;
+    }
 }
 
 function setAnswerText() {
@@ -284,10 +312,52 @@ onUnmounted(() => {
 <template>
     <div class="window bg-gray-50">
         <div class="title">
+            <!-- <button class="btnQ" @click="showHelpMenu">?</button> -->
+            <Menu as="div" class="float-left relative inline-block" v-slot="{ open }">
+                <MenuButton
+                    class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-2 pb-1 font-bold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    ?
+                    <ChevronDownIcon v-if="open" class="-mr-1 size-5 text-gray-400" aria-hidden="true" />
+                    <!-- <ChevronRightIcon v-else class="-mr-1 size-5 text-gray-400" aria-hidden="true" /> -->
+                </MenuButton>
+
+                <transition enter-active-class="transition ease-out duration-100"
+                    enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100"
+                    leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100"
+                    leave-to-class="transform opacity-0 scale-95">
+                    <MenuItems
+                        class="absolute left-0 z-10 text-left mt-3 w-60 origin-top-left rounded-md bg-white shadow-lg outline-1 outline-black/30">
+                        <div class="py-1">
+                            <MenuItem v-slot="{ active }">
+                            <div @click="showHelp(1)"
+                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
+                                List of Cations used
+                                <span class="float-right text-gray-500">F1</span>
+                            </div>
+                            </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                            <div @click="showHelp(2)"
+                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
+                                List of Anions Used
+                                <span class="float-right text-gray-500">F2</span>
+                            </div>
+                            </MenuItem>
+                            <MenuItem v-slot="{ active }">
+                            <div @click="showHelp(3)"
+                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
+                                Help for this specific question
+                                <span class="float-right text-gray-500">F3</span>
+                            </div>
+                            </MenuItem>
+                        </div>
+                    </MenuItems>
+                </transition>
+            </Menu>
+
             {{ panelTitle }}
-            <button class="btnQ" @click="showHelp">?</button>
             <button class="btnX" @click="closePanel">&times;</button>
         </div>
+
         <div class="body">
             <p class="italic font-bold text-orange-800">{{ questionTexts[answerType] }}</p>
             <p class="font-bold text-blue-900 text-lg">
@@ -326,4 +396,6 @@ onUnmounted(() => {
             </SimplePanel>
         </div>
     </teleport>
+
+
 </template>

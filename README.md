@@ -76,6 +76,10 @@ npx @tailwindcss/cli   <--- why?
 
 Add tailwind to vite.config.ts
 
+
+npm install @heroicons/vue
+npm install @headlessui/vue
+
 ####################################################################################
 
 Clicking OK on SimplePanel (e.g. incorrect answer) works, put pressing ENTER then gets sent to QeustionPanel and is trapped by the listener and it assumes that you are checking your answer.
