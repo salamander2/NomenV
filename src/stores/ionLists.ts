@@ -214,5 +214,5 @@ export const useIonListsStore = defineStore('ionLists', () => {
         }
     }
 
-    return { lists, ionTypes, addIon, getRandomIon, $getEmptyIon, getListByType }
+    return { lists, ionTypes, addIon, getRandomIon, $getEmptyIon, getListByType, Greek }
 })

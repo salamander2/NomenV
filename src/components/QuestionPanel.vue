@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/vue/20/solid'
 import SimplePanel from './SimplePanel.vue';
+import HelpPanel from './HelpPanel.vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useQuestionStore } from '@/stores/question';
 import { useQuestionListsStore } from '@/stores/questionLists';
@@ -57,12 +58,21 @@ const successText = '<span class="text-lg font-bold text-green-700 uppercase">Co
     '<span class="text-gray-800 text-base">Well done.</span><br>';
 const failureText = '<span class="text-lg font-bold text-red-700 uppercase">Incorrect!</span><br>' +
     '<span class="text-gray-800 text-base">Check spelling and try again.</span><br>';
+const helpMenuText = computed(() => {
+    const iText = ['', 'List of Cations used', 'List of Anions used', 'Help for this specific question'];
+    const cText = ['', 'Help for Covalent Naming', 'Common oxidation numbers', 'All complex covalent compounds'];
+    if (questionStore.question.isCovalent) return cText;
+    else return iText;
+});
+
+
 
 const inputAnswer = ref<HTMLInputElement | null>(null);
 
 const isGiveupVisble = ref(false);
 const isCorrectVisible = ref(false);
 const isWrongVisible = ref(false);
+const helpNumber = ref(0);
 const isHelpRequested = ref(false);
 const answerType = ref(NAME);
 const formulaSub = ref('');
@@ -120,43 +130,16 @@ function fromSubscript(text: string): string {
 
 // ======== Methods ======== //
 
-const questionTypes = computed(() => {
+//List of Cations Used : F1
+//List of Anions  Used : F2
+//Help for this specific question : F3
+function showHelp(n: number) {
 
-    const lists = [];
-    if (appState.questionOptions & 1) {
-        lists.push(ionListsStore.getListByType(1));
-    }
-    if (appState.questionOptions & 2) {
-        lists.push(ionListsStore.getListByType(2));
-    }
+    // if (n == 2 && questionStore.question.isCovalent) return;
+    //FIXME: if covalent, only do this for complex covalent questions.
+    if (n == 3) isHelpRequested.value = true; //record that they asked for help
 
-    return lists;
-});
-
-function showHelp(helpType: number) {
-    //List of Cations Used : F1
-    //List of Anions  Used : F2
-    //Help for this specific question : F3
-
-    if (helpType == 1) {
-        // console.log(JSON.stringify(questionTypes));
-        console.log(ionListsStore.getListByType(1));
-    }
-
-    if (helpType === 3) {
-
-        let altName = '';
-        if (questionStore.question.alternativeName) { //This only happens for complex covalent
-            altName = questionStore.question.alternativeName;
-        }
-        let text = "The correct answer is: " + questionStore.question.name + " = " + toSubscript(questionStore.question.formula)
-        if (altName) {
-            text += `\n\nAlternative name: ${altName}`;
-        }
-        window.alert(text)
-        isHelpRequested.value = true;
-        return;
-    }
+    if (n >= 1 && n <= 3) helpNumber.value = n; //This triggers the help panel
 }
 
 function setAnswerText() {
@@ -266,6 +249,9 @@ function checkFormulaAnswer(answer: string) {
     }
 }
 
+function closeHelp() {
+    helpNumber.value = 0;
+}
 
 function closePanel() {
     appState.state = 'SUMMARY_RESULTS';
@@ -326,26 +312,26 @@ onUnmounted(() => {
                     leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100"
                     leave-to-class="transform opacity-0 scale-95">
                     <MenuItems
-                        class="absolute left-0 z-10 text-left mt-3 w-60 origin-top-left rounded-md bg-white shadow-lg outline-1 outline-black/30">
-                        <div class="py-1">
+                        class="absolute left-0 z-10 text-left mt-3 w-66 origin-top-left rounded-md bg-white shadow-lg outline-1 outline-black/30">
+                        <div class="py-1 text-sm">
                             <MenuItem v-slot="{ active }">
                             <div @click="showHelp(1)"
-                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
-                                List of Cations used
+                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 ']">
+                                {{ helpMenuText[1] }}
                                 <span class="float-right text-gray-500">F1</span>
                             </div>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                             <div @click="showHelp(2)"
-                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
-                                List of Anions Used
+                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0']">
+                                {{ helpMenuText[2] }}
                                 <span class="float-right text-gray-500">F2</span>
                             </div>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                             <div @click="showHelp(3)"
-                                :class="[active ? 'bg-gray-100 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 text-sm']">
-                                Help for this specific question
+                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0']">
+                                {{ helpMenuText[3] }}
                                 <span class="float-right text-gray-500">F3</span>
                             </div>
                             </MenuItem>
@@ -395,6 +381,11 @@ onUnmounted(() => {
                 Result
             </SimplePanel>
         </div>
+        <transition name="modaltrans">
+            <div v-if="helpNumber > 0" class="modal-mask">
+                <HelpPanel :question="questionStore.question" :helpNumber="helpNumber" @close-help="closeHelp" />
+            </div>
+        </transition>
     </teleport>
 
 

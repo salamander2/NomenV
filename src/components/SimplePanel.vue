@@ -10,7 +10,6 @@ import { onMounted, onUnmounted } from 'vue';
 const props = defineProps({
     bodyText: String,
     closeBtnTop: { type: Boolean, default: false }
-
 })
 const emit = defineEmits(['closePanel']);
 const closePanel = () => {
@@ -48,10 +47,10 @@ onUnmounted(() => {
     <div class="window">
         <div class="title">
             <slot />
-            <button type="button" v-if="closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
+            <button type="button" v-if="props.closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
         </div>
-        <div class="body" v-html="bodyText"></div>
-        <button v-if="!closeBtnTop" type="button" id="modalBtnOK" class="btnOK" @click="closePanel"
+        <div class="body" v-html="props.bodyText"></div>
+        <button v-if="!props.closeBtnTop" type="button" id="modalBtnOK" class="btnOK" @click="closePanel"
             Xkeydown="handleKeydown">
             OK
         </button>
