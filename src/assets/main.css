@@ -183,3 +183,13 @@ fieldset legend {
 .shift-left {
     transform: translateX(-5%);
 }
+
+.scroll-content {
+    /* padding-left: 1px; */
+}
+
+.scroll-enabled {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}

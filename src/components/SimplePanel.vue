@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted } from 'vue';
 /* This is a simple window. It uses CSS from index.html
   Usage:  <AWindow :bodytext="..." :closeBtnTop=T/F> {{ title_text }}</AWindow>
 
@@ -9,12 +9,25 @@ import { onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
     bodyText: String,
-    closeBtnTop: { type: Boolean, default: false }
+    closeBtnTop: { type: Boolean, default: false },
+    width: { type: Number, default: 0 },
 })
 const emit = defineEmits(['closePanel']);
-const closePanel = () => {
-    emit('closePanel');
-};
+const closePanel = () => emit('closePanel');
+
+/*
+props.bodyText.match(/<tr\b[^>]*>/g) returns an array of all matches (all <tr> tags).
+If there are no matches, .match() returns null.
+You can’t call .length on null, so || [] ensures you always have an array.
+If there are no <tr> tags, it becomes [].length, which is 0.
+*/
+const trCount = computed(() => {
+    return props.bodyText ? (props.bodyText.match(/<tr\b[^>]*>/g) || []).length : 0;
+});
+// Conditionally enable scroll if bodyText is long
+// const needsScroll = computed(() => (props.bodyText?.length ?? 0) > 1500); // adjust threshold as needed - number of chars
+const needsScroll = computed(() => trCount.value > 26); // adjust threshold as needed
+
 function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {
         event.stopImmediatePropagation(); // Stop the event from propagating to any other listeners
@@ -36,6 +49,7 @@ onMounted(() => {
             (okButton as HTMLButtonElement).focus();
         }
     } */
+    console.log("width=" + props.width);
 });
 onUnmounted(() => {
     // Remove key listener from document
@@ -44,14 +58,17 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="window">
+    <div class="window" :style="props.width > 0 ? { width: props.width + 'px' } : {}">
         <div class="title">
             <slot />
             <button type="button" v-if="props.closeBtnTop" class="btnX" @click="$emit('closePanel')">&times;</button>
         </div>
-        <div class="body" v-html="props.bodyText"></div>
-        <button v-if="!props.closeBtnTop" type="button" id="modalBtnOK" class="btnOK" @click="closePanel"
-            Xkeydown="handleKeydown">
+        <div class="body">
+            <div :class="['scroll-content', { 'scroll-enabled': needsScroll }]">
+                <span v-html="props.bodyText"></span>
+            </div>
+        </div>
+        <button v-if="!props.closeBtnTop" type="button" id="modalBtnOK" class="btnOK" @click="closePanel">
             OK
         </button>
     </div>

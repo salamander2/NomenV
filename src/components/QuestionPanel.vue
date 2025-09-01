@@ -136,8 +136,11 @@ function fromSubscript(text: string): string {
 function showHelp(n: number) {
 
     // if (n == 2 && questionStore.question.isCovalent) return;
-    //FIXME: if covalent, only do this for complex covalent questions.
-    if (n == 3) isHelpRequested.value = true; //record that they asked for help
+
+    if (n == 3) {  //record that they asked for help
+        if (!questionStore.question.isCovalent) isHelpRequested.value = true; //for all ionic questions
+        if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) isHelpRequested.value = true; //for complex covalent questions
+    }
 
     if (n >= 1 && n <= 3) helpNumber.value = n; //This triggers the help panel
 }
