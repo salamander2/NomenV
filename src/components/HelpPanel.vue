@@ -143,7 +143,7 @@ const bodyText = computed(() => {
             "<u>Note</u> that some of the formulas created by the program from the <i>ions.dat</i> file " +
             "might not actually exist. e.g. Si3P4" +
             // "<u>Also</u> the algorithm does not consider electronegativity, so both NH3 and H3N are randomly generated." +
-            "<br><br>Here are the numbers in Greek:<br>";
+            "<br><br>Here are the Greek prefixes for numbers:<br>";
         text += "<table style='width:100px;'>";
         for (let n = 1; n <= 10; n++) {
             text += "<tr><td>" + n + "</td> <td>=</td> <td>" + ionListsStore.Greek[n] + "</td></tr>";
@@ -153,9 +153,57 @@ const bodyText = computed(() => {
     }
 
     if (props.helpNumber == 2 && props.question?.isCovalent) {
-        return "This help panel is not applicable here and should be hidden.";
+        let text = "<div style='font-size:90%;text-align:left'>";
+        text += "<table style='width:300px;'>";
+        let list = null;
+
+        if (appState.questionOptions & 128) {         //simple covalent
+            list = ionListsStore.getListByType(7);
+            text += '<tr><td colspan=4 class="text-emph text-center">Oxidation Numbers for Common Non-Metals</td></tr>';
+
+            for (let i = 0; i < list.length; i++) {
+                const ion = list[i];
+                text += "<tr><td>" + ion[0] + " / " + ion[5] + " </td><td>" + ion[1] + "</td><td>&nbsp;";
+
+                //loop through each character in  ion[2]
+                for (let c = 0; c < String(ion[2]).length; c++) {
+                    if (String(ion[2])[c] != '0') {
+                        text += "+" + String(ion[2])[c] + " ";
+                    }
+                }
+
+                text += "</td><td>";
+                if (ion[6] != 0) text += "-" + ion[6];
+                text += "</td></tr>";
+            }
+            text += "</table></div>";
+        } else {
+            text = "Help not applicable";
+        }
+
+        return text;
     }
 
+    if (props.helpNumber == 3 && props.question?.isCovalent) {
+        let text = "<div style='font-size:90%;text-align:left; padding-left:6px;'>";
+        text += "<table style='width:290px;'>";
+        let list = null;
+        if (appState.questionOptions & 256) {         //Complex Covalent
+            list = ionListsStore.getListByType(8);
+            text += '<tr><td colspan=3 class="text-emph text-center">List of Complex Covalent Compounds<br><i style="font-weight:normal">Alternate names in ()</i></td></tr>';
+
+            for (let i = 0; i < list.length; i++) {
+                const ion = list[i];
+                text += "<tr><td>" + ion[0];
+                if (ion[5]) text += " <i>(" + ion[5] + ")</i>";
+                text += "</td> <td>" + toSubscript(ion[1]) + "</td></tr>";
+            }
+            text += "</table></div>";
+        } else {
+            text = "Help not applicable";
+        }
+        return text;
+    }
 
     return "Place holder " + props.helpNumber;
 });

@@ -60,11 +60,18 @@ const failureText = '<span class="text-lg font-bold text-red-700 uppercase">Inco
     '<span class="text-gray-800 text-base">Check spelling and try again.</span><br>';
 const helpMenuText = computed(() => {
     const iText = ['', 'List of Cations used', 'List of Anions used', 'Help for this specific question'];
-    const cText = ['', 'Help for Covalent Naming', 'Common oxidation numbers', 'All complex covalent compounds'];
-    if (questionStore.question.isCovalent) return cText;
+    const cText = ['', 'Help for Covalent Naming', '', ''];
+    if (questionStore.question.isCovalent) {
+        if (appState.questionOptions & 128) {         //simple covalent
+            cText[2] = 'Common oxidation numbers';
+        }
+        if (appState.questionOptions & 256) {
+            cText[3] = 'All complex covalent compounds';
+        }
+        return cText;
+    }
     else return iText;
 });
-
 
 
 const inputAnswer = ref<HTMLInputElement | null>(null);
@@ -135,10 +142,13 @@ function fromSubscript(text: string): string {
 //Help for this specific question : F3
 function showHelp(n: number) {
 
+    //FIXME only show help2 for covalent if "simple covalent" is selected
     // if (n == 2 && questionStore.question.isCovalent) return;
 
+    //FIXME only show help3 for covalent if "complex covalent" is selected
     if (n == 3) {  //record that they asked for help
         if (!questionStore.question.isCovalent) isHelpRequested.value = true; //for all ionic questions
+        //FIXME: this will be grayed out and disabled if the question is simple covalent
         if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) isHelpRequested.value = true; //for complex covalent questions
     }
 
@@ -317,9 +327,8 @@ onUnmounted(() => {
                     <MenuItems
                         class="absolute left-0 z-10 text-left mt-3 w-66 origin-top-left rounded-md bg-white shadow-lg outline-1 outline-black/30">
                         <div class="py-1 text-sm">
-                            <MenuItem v-slot="{ active }">
-                            <div @click="showHelp(1)"
-                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0 ']">
+                            <MenuItem>
+                            <div @click="showHelp(1)" class="text-gray-800 hover:bg-blue-200 block px-2 py-0">
                                 {{ helpMenuText[1] }}
                                 <span class="float-right text-gray-500">F1</span>
                             </div>
