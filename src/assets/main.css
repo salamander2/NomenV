@@ -67,6 +67,10 @@ body {
     border: 2px solid gray;
     border-radius: 5px;
     width: 350px;
+    max-width: 100vw;
+    /* Add this line */
+    min-width: 0;
+    /* Add this line for flexbox/grid compatibility */
     font-family: 'Lucida Sans', 'Lucida Grande', Arial, Geneva, Verdana, sans-serif;
     text-align: center;
     padding-bottom: 8px;
@@ -184,6 +188,15 @@ fieldset legend {
     transform: translateX(-5%);
 }
 
+/*
+@media (max-width: 480px) {
+    .scroll-content {
+        max-width: 100vw;
+        overflow-x: auto;
+    }
+}
+*/
+
 .scroll-content {
     /* padding-left: 1px; */
 }
@@ -192,4 +205,38 @@ fieldset legend {
     max-height: 400px;
     overflow-y: auto;
     padding-right: 8px;
+}
+
+.tabs {
+    display: flex;
+    /* justify-content: center; */
+    margin-bottom: -1px;
+    padding-left: 20px;
+    background-color: #79c;
+    font-size: 110%;
+    color: black;
+}
+
+.tab {
+    background: #ddd;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 6px 18px;
+    margin: 6px 3px 0 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #444;
+    transition: background 0.2s;
+}
+
+.tab.active {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+    color: #222;
+    z-index: 2;
+}
+
+.tab:not(.active):hover {
+    background: #b3c9e5;
 }

@@ -80,7 +80,7 @@ onMounted(() => {
 
         <div Xstyle="display:flex;justify-content: space-between;" class="flex justify-between mt-2 mb-4">
             <button type="button" @click="showAbout" class="btnOK">About</button>
-            <button type="button" @click="showUsageHelp" class="btnOK">Usage</button>
+            <!-- <button type="button" @click="showUsageHelp" class="btnOK">Usage</button> -->
             <button type="button" @click="showPeriodic" class="btnOK">Periodic</button>
         </div>
 
@@ -92,11 +92,13 @@ onMounted(() => {
                     <AboutPanel @close-about="closeAbout" />
                 </div>
             </transition>
+            <!--
             <transition name="modaltrans">
                 <div v-if="isUsageHelpVisible" class="modal-mask">
                     <UsageHelpPanel @closeUsageHelp="closeUsageHelp" />
                 </div>
             </transition>
+            -->
         </teleport>
 
         <PeriodicPanel v-if="isPeriodicVisible" @close-periodic="closePeriodic" />

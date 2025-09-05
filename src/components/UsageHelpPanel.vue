@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import SimplePanel from './SimplePanel.vue';
-// import { defineComponent } from 'vue';
-// import { useStore } from 'vuex';
-// import { useRoute } from 'vue-router';
 
 const bodyText =
     `<div class="text-left">

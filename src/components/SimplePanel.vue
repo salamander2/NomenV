@@ -53,7 +53,6 @@ onMounted(() => {
             (okButton as HTMLButtonElement).focus();
         }
     } */
-    console.log("width=" + props.width);
 });
 onUnmounted(() => {
     // Remove key listener from document
