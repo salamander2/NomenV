@@ -9,7 +9,7 @@ const bodyText =
       <div class="text-emph">Michael Harwood</div>
       <div style='padding-bottom:5px;'>It is free for trial purposes,
     but you must pay the registration fee if you want to continue to use it.</div>
-      <P>Contact <span class="text-emph">'harwood@quarkphysics.ca'</span><br>
+      <P>Contact <a href="nomen@iquark.ca" class="text-emph">'nomen@iquark.ca'</a><br>
     for licensing information</p>
     <p>or see the webpage<br>
     <a href="https://quarkphysics.ca/nomen" target="_blank" class="text-emph">https://quarkphysics.ca/nomen</a>

@@ -12,6 +12,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+#Add AWS Credentials to GitHub Secrets
+#Add these secrets to your repo:
+#AWS_ACCESS_KEY_ID
+#AWS_SECRET_ACCESS_KEY
+#AWS_REGION
+#AWS_SECURITY_GROUP_ID
+
+
+  #    # Step 1: Add 0.0.0.0/0 rule for port 9876
+      #- name: Open SSH port for all IPs
+        #uses: aws-actions/aws-cli@v1
+        #with:
+          #aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          #aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          #aws-region: ${{ secrets.AWS_REGION }}
+          #args: >
+            #ec2 authorize-security-group-ingress
+            #--group-id ${{ secrets.AWS_SECURITY_GROUP_ID }}
+            #--protocol tcp
+            #--port 9876
+            #--cidr 0.0.0.0/0
+
+
+      # This connects from IP 135.119.237.65 (Micrsoft Azure)
       - name: Test SSH connection
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -56,11 +80,26 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: ${{ secrets.SSH_PORT }}
-          source: "./dist/assets"
+          source: "./dist"
           target: "/home/quarkphysics/nomenV"
           rm: false
           debug: true
           strip_components: 1
+
+      # Final step: Remove 0.0.0.0/0 rule after deploy
+    #  - name: Close SSH port for all IPs
+    #    if: always()
+    #    uses: aws-actions/aws-cli@v1
+    #    with:
+    #      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #      aws-region: ${{ secrets.AWS_REGION }}
+    #      args: >
+    #        ec2 revoke-security-group-ingress
+    #        --group-id ${{ secrets.AWS_SECURITY_GROUP_ID }}
+    #        --protocol tcp
+    #        --port 9876
+    #        --cidr 0.0.0.0/0
 
 # or build on server (deleting much above)
         # script: |

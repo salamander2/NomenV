@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import MainPanel from './components/MainPanel.vue';
 import AboutPanel from './components/AboutPanel.vue';
 import PeriodicPanel from './components/PeriodicPanel.vue';
+import UsageHelpPanel from './components/UsageHelpPanel.vue';
 // import { RouterLink, RouterView } from 'vue-router'
 
 import fileContent from './res/ions.dat?raw';
@@ -13,23 +14,21 @@ import { useIonListsStore } from '@/stores/ionLists';
 //variables
 const isAboutVisible = ref(false);
 const isPeriodicVisible = ref(false);
+const isUsageHelpVisible = ref(false);
 const appState = useAppStateStore();
 const ionLists = useIonListsStore();
 
 //Methods
-const showAbout = () => {
-    isAboutVisible.value = true;
-};
-const hideAbout = () => {
-    isAboutVisible.value = false;
-};
+const showAbout = () => isAboutVisible.value = true;
+const closeAbout = () => isAboutVisible.value = false;
 const showPeriodic = () => {
     // isPeriodicVisible.value = true;
     isPeriodicVisible.value = !isPeriodicVisible.value;
 };
-const closePeriodic = () => {
-    isPeriodicVisible.value = false;
-};
+const closePeriodic = () => isPeriodicVisible.value = false;
+
+const showUsageHelp = () => isUsageHelpVisible.value = true;
+const closeUsageHelp = () => isUsageHelpVisible.value = false;
 
 //method to parse fileContent and store it in a store.
 onMounted(() => {
@@ -72,16 +71,16 @@ onMounted(() => {
             <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
             <div class="font-bold text-3xl font-sans text-gray-400">
                 Inorganic Chemistry Nomenclature <!-- This line sets the width of the visible app box -->
-                <button class="btnX text-base !bg-gray-600" style="margin: -10px -16px auto 10px;"
-                    @click="$emit('exitProgram')">&times;</button>
+                <!-- <button class="btnX text-base !bg-gray-600" style="margin: -10px -16px auto 10px;" @click="$emit('exitProgram')">&times;</button> -->
                 <div class="text-2xl font-sans text-gray-400">
                     Quiz Program
                 </div>
             </div>
         </header>
 
-        <div Xstyle="display:flex;justify-content: space-between;" class="flex justify-between mb-4">
+        <div Xstyle="display:flex;justify-content: space-between;" class="flex justify-between mt-2 mb-4">
             <button type="button" @click="showAbout" class="btnOK">About</button>
+            <button type="button" @click="showUsageHelp" class="btnOK">Usage</button>
             <button type="button" @click="showPeriodic" class="btnOK">Periodic</button>
         </div>
 
@@ -90,7 +89,12 @@ onMounted(() => {
             <transition name="modaltrans">
                 <!-- Nothing else can be in here or it will no longer center -->
                 <div v-if="isAboutVisible" class="modal-mask">
-                    <AboutPanel @close-about="hideAbout" />
+                    <AboutPanel @close-about="closeAbout" />
+                </div>
+            </transition>
+            <transition name="modaltrans">
+                <div v-if="isUsageHelpVisible" class="modal-mask">
+                    <UsageHelpPanel @closeUsageHelp="closeUsageHelp" />
                 </div>
             </transition>
         </teleport>

@@ -12,7 +12,7 @@ export const useQuestionListsStore = defineStore('questionList', () => {
     const questionCorrectList = ref<Array<{ name: string, formula: string, neededHelp: boolean }>>([])
     const questionWrongList = ref<Array<{ name: string, formula: string, neededHelp: boolean }>>([])
 
-    const maxQuestions = 5; // Maximum number of questions before printing results
+    const maxQuestions = 20; // Maximum number of questions before printing results. Normally 20
     const questionCounter = ref(0);
 
     function addQuestion(name: string, formula: string, isCorrect: boolean, neededHelp: boolean) {

@@ -26,7 +26,11 @@ const trCount = computed(() => {
 });
 // Conditionally enable scroll if bodyText is long
 // const needsScroll = computed(() => (props.bodyText?.length ?? 0) > 1500); // adjust threshold as needed - number of chars
-const needsScroll = computed(() => trCount.value > 26); // adjust threshold as needed
+const needsScroll = computed(() => {
+    if (trCount.value > 26) return true; //for tables of ions
+    if ((props.bodyText?.length ?? 0) > 1000) return true;
+    return false;
+}); // adjust threshold as needed
 
 function handleKeydown(event: KeyboardEvent) {
     if (event.key === 'Escape') {

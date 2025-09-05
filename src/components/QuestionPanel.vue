@@ -378,21 +378,27 @@ onUnmounted(() => {
     <!-- put all modals to the bottom of the HTML, right before the end of BODY -->
     <teleport to="body">
         <!-- Nothing else can be in here or it will no longer center -->
-        <div v-if="isGiveupVisble" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="answerText" @closePanel="nextQuestion">
-                Answer
-            </SimplePanel>
-        </div>
-        <div v-if="isCorrectVisible" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="nextQuestion">
-                Result
-            </SimplePanel>
-        </div>
-        <div v-if="isWrongVisible" class="modal-mask">
-            <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="afterWrongModal">
-                Result
-            </SimplePanel>
-        </div>
+        <transition name="modaltrans">
+            <div v-if="isGiveupVisble" class="modal-mask">
+                <SimplePanel class="bg-white !w-[300px]" :bodyText="answerText" @closePanel="nextQuestion">
+                    Answer
+                </SimplePanel>
+            </div>
+        </transition>
+        <transition name="modaltrans">
+            <div v-if="isCorrectVisible" class="modal-mask">
+                <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="nextQuestion">
+                    Result
+                </SimplePanel>
+            </div>
+        </transition>
+        <transition name="modaltrans">
+            <div v-if="isWrongVisible" class="modal-mask">
+                <SimplePanel class="bg-white !w-[300px]" :bodyText="resultText" @closePanel="afterWrongModal">
+                    Result
+                </SimplePanel>
+            </div>
+        </transition>
         <transition name="modaltrans">
             <div v-if="helpNumber > 0" class="modal-mask">
                 <HelpPanel :question="questionStore.question" :helpNumber="helpNumber" @close-help="closeHelp" />
