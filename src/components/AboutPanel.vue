@@ -20,20 +20,19 @@ const usageTabLabel = computed(() =>
 );
 
 const aboutText =
-    `<P>This program is written by </P>
+    `<p>This program is written by </p>
       <div class="text-emph">Michael Harwood</div>
       <div style='padding-bottom:5px;'>It is free for trial purposes,
-    but you must pay the registration fee if you want to continue to use it.</div>
-      <P>Contact <a href="nomen@iquark.ca" class="text-emph">'nomen@iquark.ca'</a><br>
-    for licensing information</p>
-    <p>or see the webpage<br>
-    <a href="https://quarkphysics.ca/nomen" target="_blank" class="text-emph">https://quarkphysics.ca/nomen</a>
+    but must be licensed for continued use or for use by schools.</div>
+    <p class="mt-3">See the webpage <a href="https://quarkphysics.ca/nomen" target="_blank" class="text-emph">https://nomen.iquark.ca/info</a>
+    for licensing and other information.
+      </p>
+      <p class="mt-3">Contact <a href="nomen@iquark.ca" class="text-emph">'nomen@iquark.ca'</a><br> for more information or to report bugs.</p>
       </div>`;
-const aboutTitle = 'About this program';
 
 const usageText =
     `<div class="text-left">
-<p class="text-center">This program quizzes you on inorganic nomenclature.</p>
+<p class="text-center font-bold">This program quizzes you on inorganic nomenclature.</p>
 <p class="mt-2">You start on the <span class="text-emph">Options page</span> by selecting which type of questions you want.
 <u>Ionic</u> questions have a number of options for cations and anions that can be selected.
 If you select <u>covalent</u> questions, then the ionic ones are disabled.</p>

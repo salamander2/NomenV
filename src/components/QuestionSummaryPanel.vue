@@ -207,8 +207,8 @@ function printResults() {
     doc.line(20, y, pageWidth - 20, y); y += 10;
     doc.setFontSize(12);
     doc.setTextColor(80, 80, 80);
-    doc.text("This program is free for trial purposes, but must be registered for continued use.", 20, y); y += 10;
-    doc.text("Contact harwood@quarkphysics.ca for licensing information.", 20, y); y += 10;
+    doc.text("This program is free for trial purposes, but must be registered for continued use and for use by schools.", 20, y); y += 10;
+    doc.text("Contact nomen@iquark.ca for licensing information.", 20, y); y += 10;
 
     /* This program is written by Michael Harwood
 It is free for trial purposes, but you must pay the registration fee if you want to continue to use it.
