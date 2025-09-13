@@ -1,0 +1,257 @@
+/* general definitions */	
+body {
+	margin: 0 auto;
+	padding: 0;	
+	background-color: #051A30; 	/*#013100; */
+	font-size: 100%;
+ 	text-align:center;	
+	color: #000;
+	}
+
+a:link
+		{ color: #0000AA; text-decoration: none; background-color: transparent;font-weight: bold;}
+a:visited
+		{ color: #0000AA; text-decoration: none; background-color: transparent; font-weight: bold;}
+a:hover
+		{ color: #3300CC; text-decoration: none; background-color: #FFFFAA; font-weight: bold;}
+
+h1 {
+		font-family: helvetica, geneva, arial, sans-serif;
+		font-size: 19px;
+		font-weight: bold;
+		color: #003399;
+		background-color: transparent;
+		line-height: 22px;
+		padding: 0px;
+		display: block;
+		text-align: center; 
+		}
+		
+h2 {
+		font-family: helvetica, geneva, arial, sans-serif;
+		font-size: 17px;
+		font-weight: bold;
+		color: #006030;
+		background-color: transparent;
+		}
+	
+h3 {
+		font-family: helvetica, geneva, arial, sans-serif;
+		font-size: 14px;
+		font-weight: bold;
+		color: #005000;
+		background-color: transparent;
+		}
+
+.in { margin-left: 30px;}
+.out {margin-left: 30px;text-indent:-30px;}
+
+	/* text formatting styles */
+
+.orange {color: #FF7D0A; background-color: transparent;} /* MH #FFBB66 or FFBB33*/
+
+.attrib {color: #333333; font-size:12px; font-family: arial, helvetica, sans-serif; }
+
+em.uline
+		{
+		font-style: normal;
+		text-decoration: underline;
+		}
+
+p {	color:#000000;  }
+
+.sftxt {	
+		font-size: 16px;
+		line-height: 18px;
+		font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif; /* arial, helvetica, sans-serif; */
+		}
+		
+.nsftxt {
+		font-size: 14px;
+		line-height: 16px;
+		font-family: arial, helvetica, sans-serif; 
+		}		
+		
+/* definitions for specific sections */
+#fixdtop {		/* don't make a separate H1 tag here, it's not needed */
+		/*position: fixed;
+		left: 235px;*/
+		left:0px;
+		top: 0px;
+		background-color: transparent;
+		background-color: #336688;
+		padding: 25px;
+		width: 900px;
+		display: block;
+		text-align: center;
+		font-family: "Arial", sans-serif;
+		font-size: 26px;
+		font-weight: bold;
+		color: #AAFFFF;
+		color: #FFFFFF;
+		line-height: 22px;
+		margin: 8px 8px 8px 8px;
+		}
+
+		
+
+/* all of the main content goes in here */
+#main {
+		margin-left: 60px;
+		display: block;
+		text-align: left;
+		}
+		
+/* this is for main content box, relatively placed */		
+.box {	
+		position: relative;		
+		margin-right: auto;	
+		margin-top: 6px;
+		padding: 0;
+		width: 800px;
+		height: auto;
+		background-color: #FFFFFF;
+		}
+		
+ .box2 {	/* used for a wider box in Models page */
+		position: relative;		
+		margin-right: auto;	
+		margin-top: 6px;
+		padding: 0;
+		width: 600px;
+		height: auto;
+		background-color: #FFFFFF;
+}		
+
+#innerBox {	/* the inner box on the main page (like a second column) */
+	position: relative;		
+	margin-top: 6px;
+	padding: 0px 6px 0px 6px;
+	float: right;
+	width: 250px;
+	background-color: #F5F5FF;
+	border: 2px solid #000099;
+	font-size: 14px;
+}
+
+.content {
+		padding:2.2em;
+		color: #000000; 
+		font-family: Verdana, sans-serif;
+		/*font-size: 12px;
+		line-height: normal;
+		font-style: normal;
+		font-weight: normal;*/
+	}
+.content a {border-bottom: 1px dotted #2E432E;}	
+
+/* set most table properties in HTML::  table {	background-color:#FFFFFF; } */
+
+/* td { color:#000000; } -- this is now done in CONTENT*/
+
+/* for all general tables -- colour inherited from a:link*/
+table {
+	/* border-bottom: 1px solid #2E432E;  */
+	}
+td a:link { 
+		text-decoration: none; 
+		background-color: transparent;
+		font-weight: bold; 	
+		line-height: 18px;
+		padding: 3px 12px 3px 12px;
+		background-color: #DDEEFF;
+		color: #000;		
+}
+td.selected a:link{	
+	background-color: #FFA;
+	color:#11A;
+	}
+		
+td a:visited
+		{ color: #000; text-decoration: none; background-color: transparent; font-weight: bold;}
+ 
+
+/* table.download { background-color: #334455;	} set in HTML */
+/* table.download td {  color:#FFFFFF; } this also affects the colour of the border lines */
+/* #download {}*/
+#download td a:link { color:#FFFF00; background-color: transparent;}
+#download td a:visited { color:#FFFF00; background-color: transparent;}
+#download td a:hover{ color:#FFFFCC; background-color: transparent;}
+
+/* this must be fixed to work with IE (thus reset.css must be loaded first) NO. RESET messes up LI ... */
+#tMenu {			/* table for main menu */
+	border: 2px solid #FFFF00;
+	border: 2px outset #FFFF00;
+	font-size: 14px;
+	line-height: 35px;
+	font-family: arial, helvetica, sans-serif; 
+	background-color: #EEAA33;
+	padding: 7px;
+	margin: 5px;
+	border-spacing: 2px;
+	font-weight: bold;	
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+#tMenu td {
+	padding: 3px;	
+	}
+
+#tMenu td a:link { 
+	text-decoration: none; 
+	background-color: transparent;
+	line-height: 18px;
+	padding: 4px 13px 4px 13px;
+	background-color: #DDEEFF;
+	color: #000000;
+	border: 2px solid #333333;
+	border: 2px inset #333333;
+}
+
+#tMenu td a:visited { 
+		text-decoration: none; 
+		background-color: transparent;
+		line-height: 18px;
+		padding: 4px 13px 4px 13px;
+		background-color: #DDEEFF;
+		color: #000000;
+		border: 2px solid #333333;
+		border: 2px inset #333333;
+}
+
+#tMenu td.selected a:link{	
+	background-color: #FFA;
+	color:#11A;
+	border: 2px solid #333333;
+	border: 2px inset #333333;
+	}
+#tMenu td.selected a:visited{	
+	background-color: #FFA;
+	color:#11A;
+	border: 2px solid #333333;
+	border: 2px inset #333333;
+	}
+
+
+#footer {
+		color: #336688;
+		padding-top: 10px;
+		margin-top: 15px;
+		margin-left: 0px;
+		border-top: 1px solid #336688;
+		}
+#footer a {border-bottom: none;}
+
+.boxlink {
+		font-family: helvetica, geneva, arial, sans-serif;
+		font-weight: bold;
+		color: #000;
+		background-color: transparent;
+		border: solid 2px #006030;
+		padding: 10px 6px;
+		text-align: center;
+		background-color: #FFE;
+		font-size: 18px;
+		}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://quarkphysics.ca/nomen/" href="nomen_webstart.jnlp">
+    <information>
+        <title>Chemistry Nomenclature Quiz</title>
+        <vendor>Michael Harwood</vendor>
+  		<icon href="contacts.ico"/>
+          <offline-allowed/>
+<!--          <shortcut>
+               <desktop/>
+               <menu submenu="Contacts"/>
+          </shortcut>
+-->
+     </information>
+<!--	<security><all-permissions/></security> -->
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.6+"/>
+        <jar href="nomen6.13.jar" main="true" />
+    </resources>
+    <application-desc name="Chemistry Nomenclature Quiz Program" 
+		main-class="ca.quarkphysics.harwood.nomen.nomen_webstart"
+         width="600"
+         height="600" >
+     </application-desc>
+     <update check="background"/>
+</jnlp>                         
+
+  <!--    this was in the application-desc section
+main-class="myGraphics.dotgame_webstart"
+main-class="ca.quarkphysics.harwood.nomen.nomen_webstart"
+         width="600"
+         height="600"  -->
+	

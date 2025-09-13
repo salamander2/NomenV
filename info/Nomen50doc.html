@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<meta name="description" content="Java program to quiz you on all inorganic nomenclature and formulas">
+	<meta name="keywords" content="nomenclature, ionic, covalent, chemistry, oxyanion, formula">
+	<TITLE>Chemistry Nomenclature Quiz Program</TITLE>
+	<link rel="shortcut icon" href="layout/pt2.ico" type="image/ico">	
+	<link rel=stylesheet href="./layout/Nomen.css" type="text/css">
+</HEAD>
+<BODY text="#FFFFFF" bgcolor="#001030">
+<!-- ==================================================================== //-->	
+<!-- Header box //-->
+<!-- ==================================================================== //-->	
+
+<div id="fixdtop">			
+<img src="./images/icon_pt2.gif" height="32" width="32">&nbsp;&nbsp;&nbsp; Chemistry Nomenclature Quiz Program &nbsp;&nbsp;&nbsp;<img src="./images/icon_pt2.gif" height="32" width="32">
+</div>
+	
+<p>&nbsp;</p>
+
+<!-- ==================================================================== //-->	
+<!-- Main Content //-->
+<!-- ==================================================================== //-->	
+<div id="main">
+
+	<!--- box-->
+	<div class="box"><div class="bl"><div class="br"><div class="tl"><div class="tr">
+	<center><table width="75%" id="tMenu">
+	<tr><td><p>MENU: </p></td>
+	<td><a href="Nomen.html">Features</a></td>
+	<td><a href="NomenScreen.html">Screenshots</a></td>
+	<td><a href="NomenDoc.html#download">Download</a></td>
+	<td class="selected"><a href="NomenDoc.html">Documentation</a></td>
+	<td><a href="NomenReg.html">Register</a></td></table></center>
+	
+	<div class="content">		
+	<h1>Documentation</h1>	    
+	
+              <p><i>Written by Michael Harwood using Visual Basic in May 2011.<br>
+                harwood@quarkphysics.ca</i></p>
+				<hr color="#55AAAA" size="6">
+              <h2>Acknowledgements</h2>
+                <p>Thanks to Mr. Dennis Trankner who wrote a DOS nomenclature program 
+                in 1991 called "CHEMICAL NOMENCLATURE V 4.00", a.k.a. Nomen40.exe. 
+                Nomen40 was the inspiration for this program.</p>
+                <h2>Hardware required</h2>
+                <p>This will run on Windows XP and higher on almost any hardware. 
+                Sorry, no Linux version - just run it in Wine.</p>
+                <h2>Installation</h2>
+                <ol><li>Unzip the file and run the program.</li>
+                <li>If there is an error about RICHTX32.OCX, then copy the file 
+                RICHTX32.OCX (included in the zip file) to C:\Windows\System32</li>
+                <li>You can edit the file IONS.DAT to customize the data used by 
+                the program.</li></ol>
+                <h2>Licensing &amp; Registration</h2>
+                <p>This program is shareware. Try it and if you find it useful, please 
+                pay a small registration fee:<br>
+                Individual Users: $5.00<br>
+                School wide license: $100.00</p>
+              <p>Use in poorer countries is free. A poor country is one that has 
+                a GDP per capita of less than US$15,000 (although, there may be 
+                rich schools in that country who want to use it and should pay 
+                for it).</p>
+              <p><u>How to pay:</u> go to PayPal, click on &quot;Send Money&quot;, type 
+                in &quot;harwood@quarkphysics.ca&quot; Follow the instructions. 
+                I will send you a receipt for proof of purchase. <br>
+                Email me at harwood@quarkphysics.ca if you need help.<br>
+				<hr color="#55AAAA" size="6">
+                <h1>Features</h1>
+                <ul><li>You can choose which types of ionic compounds you want</li>
+                <li>You can choose which type of questions you want (names, formulas 
+                or both)</li>
+                <li>The list of ions used is in the file IONS.DAT and can be edited. 
+                I included what I considered the most common multivalent ions, 
+                polyatomic ions, and covalent compounds.</li>
+                <li>After 20 questions, you will be given the option to print out 
+                the questions you answered. This goes to the default printer and 
+                may be useful if your teacher requires proof of your competence.</li>
+                <li>Spelling is not checked: element symbols must be in the proper 
+                case. </li></ul>
+              <h1>How it works</h1>
+              <p><u>IONS.DAT file</u></p>
+                <p>All of the ions and covalent compounds that the nomenclature program 
+                uses are read from the file "<b>ions.dat</b>". This file must be in the 
+                same directory (folder) as Nomen50.exe. 
+                You can edit this file to add/remove/change information. </p>
+                <p>For example, I have put in the spelling sulfur and sulfide with 
+                an "F". The program will not recognize sulphur spelled with a 
+                PH unless you edit the ions.dat file and change the spelling there.</p>
+              <p>There are 9 different section headings in the file. <br>
+                <b>Each section can have up to 40 ions in it.</b> Any more will be ignored. 
+                The spelling and format of the headings must be exactly as it 
+                is in the ions.dat file. Everything after a heading is considered 
+                part of that category until the next heading is reached or the 
+                end of the file is reached.</p>
+                <p>For example, everything under [Cations-monovalent] is considered 
+                to be a positively charged monovalent ion.</p>
+                <p>Lines beginning with a semi-colon are considered to be comments 
+                and are ignored as are blank lines.</p>
+              <p>All lines must have exactly the following format: </p>
+              <p>There are three fields, separated by commas. No spaces or other 
+                characters can be anywhere.</p>
+                <ul><li>The first field is the name of the ion or element. This can 
+                be any case as the program will "uppercase" it anyway.</li>
+                <li>The second field is the formula or element symbol. The case 
+                must be correct here. Numbers are just typed in in regular case. 
+                No parentheses or charges are allowed.</li>
+                <li>The third field is the charge or oxidation number. Do not put 
+                in an + or - signs. If there are many possible charges (for positive 
+                ions only), then write the numbers in any order, but do not separate 
+                them.</li></ul>
+              <p>Examples of correct formatting (the ions belong in different 
+                categories): </p>
+				<blockquote>
+				  <p>ammonium,NH4,1</p>
+				  <p>carbonate,CO3,2</p>
+				  <p>manganese,Mn,76432</p>
+				</blockquote>
+
+                
+              <p>The [Covalent-complex] section has a special format. There are 
+                only two fields: one for the name and the next for the formula.<br>
+                Example of covalent-complex formatting:</p>
+				<blockquote><p>methane,CH4</p></blockquote>
+              
+			  <h2>Options Screen</h2>
+                <p>On the first screen, you select the types of anions and cations 
+                that you want. You can choose which type of questions you want 
+                (names, formulas or both). If you choose covalent compounds, the 
+                ionic selections are disabled until you de-select the covalent 
+                ones. Click the Start button.<br>
+                The options screen is still visible, so that if you want to, you 
+                can change your options as you go along. The next question that 
+                the program creates will reflect your updated choices.<br>
+                Note: if you choose covalent compounds, the ionic selections are 
+                disabled until you de-select the covalent ones.<br>
+                </p>
+                <h2>Questions Screen</h2>
+                <p>This is the main screen.<br>
+                In the top left hand corner are the menu items "About" and "Exit".</p>
+              <h3>Help:</h3>
+                <p>F1 and F2 will give the list of all of the positive and negative 
+                ions respectively. For covalent compounds, there is no F2.<br>
+                F3 will give help specific for the current question. If you choose 
+                F3, this is recorded in the printout (see below).</p>
+              <h3>Question generation:</h3>
+                <p>The program randomly chooses a cation and then randomly chooses 
+                an anion. If the cation is multivalent it randomly chooses a charge 
+                from the charges listed in ions.dat. <br>
+                When a simple covalent compound is randomly made, the program 
+                first checks the complex covalent compounds to make sure that 
+                it doesn’t have a special name. If a special name is found, the 
+                special name is used. This means that CH4 will be called methane, 
+                not carbon tetrahydride.</p>
+              <h3>Entering answers</h3>
+                <p>When you type in a chemical name the case does not matter. Formulas 
+                must have the correct case.<br>
+                To check your answer, press &lt;ENTER&gt; or click on the check 
+                answer button.<br>
+                If you get it wrong, you can fix it and try again.<br>
+                If you click "I give up" then the correct answer will be displayed.</p>
+              <h3>Score &amp; Printout:</h3>
+                <p>Your score is recorded in the top right corner. <br>
+                After 20 questions, you are asked if you want to print out a list 
+                of the questions asked. This is because some teachers may want 
+                to mark it. The questions are printed to the default printer on 
+                your computer. An answer is only considered wrong if you press 
+                "I give up".<br>
+                If you have pressed F3 for a question, the program notes "help 
+                needed" next to that question.</p>
+              <h3>Bugs and missing features</h3>
+                <p>If you find any bugs please email me at harwood@quarkphysics.ca<br>
+                If you want a feature that I have not included, feel free to contact 
+                me. I may add it to the program – depending on whether I am making 
+                any money from it or not.</p>
+              <p></p>
+              <p><i><font size="-1">This document last updated on May 2, 2011</font></i></p>
+              
+
+</div>
+            <!--end of box content-->		
+	</div></div></div></div><!--end of outer box corners --></div> 
+	<!-- end of outerbox -->
+
+<!-- ==================================================================== //-->
+<!--  Start footer //-->
+<!-- ==================================================================== //-->	
+<div id="footer" class="footer">
+	Design &copy; 2012 Harwood. 
+</div>
+<!-- ==================================================================== //-->
+<!--  End footer //-->
+<!-- ==================================================================== //-->					
+</div> <!-- end MAIN content section -->
+
+
+</body>
+</html>

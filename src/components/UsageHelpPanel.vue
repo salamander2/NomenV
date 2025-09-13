@@ -3,11 +3,11 @@ import SimplePanel from './SimplePanel.vue';
 
 const bodyText =
     `<div class="text-left">
-<p>This program quizzes you on inorganic nomenclature.</p>
-<p class="mt-2">You start on the <span class="text-emph">Options page</span> by selecting which type of questions you want.
-<u>Ionic</u> questions have a number of options for cations and anions that can be selected.
-If you select <u>covalent</u> questions, then the ionic ones are disabled.</p>
-<p>Once you press <span class="text-emph">Start</span>, you'll see the first question and will have to type in the name or formula.</p>
+<p style="font-size:110%">This program quizzes you on inorganic nomenclature.</p>
+
+<p class="mt-2">You start on the <span class="text-emph">Options page</span> by selecting which type of questions you want.<br><br>
+Note that if you select <u>covalent</u> questions, then the ionic ones are disabled.</p>
+<p class="mt-2">Once you press <span class="text-emph">Start</span>, you'll see the first question and will have to type in the name or formula.</p>
 <ul class="list-disc ml-5">
 <li>Formulas are case sensitive and require () when appropriate: <br>e.g. Ca(OH)2</li>
 <li>Names are not case sensitive, but require () when appropriate: <br>e.g iron(III) chloride</li>

@@ -34,9 +34,8 @@ const usageText =
     `<div class="text-left">
 <p class="text-center font-bold">This program quizzes you on inorganic nomenclature.</p>
 <p class="mt-2">You start on the <span class="text-emph">Options page</span> by selecting which type of questions you want.
-<u>Ionic</u> questions have a number of options for cations and anions that can be selected.
-If you select <u>covalent</u> questions, then the ionic ones are disabled.</p>
-<p>Once you press <span class="text-emph">Start</span>, you'll see the first question and will have to type in the name or formula.</p>
+If you select <u>covalent</u> questions, then the <u>ionic</u> ones are disabled.</p>
+<p class="my-2">Once you press <span class="text-emph">Start</span>, you'll see the first question and will have to type in the name or formula.</p>
 <ul class="list-disc ml-5">
 <li>Formulas are case sensitive and require () when appropriate: <br>e.g. Ca(OH)2</li>
 <li>Names are not case sensitive, but require () when appropriate: <br>e.g iron(III) chloride</li>
