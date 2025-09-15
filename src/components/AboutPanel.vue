@@ -20,11 +20,12 @@ const usageTabLabel = computed(() =>
 );
 
 const aboutText =
-    `<p>This program is written by </p>
+    `<h2 class="font-bold">Nomen v7.0</h2>
+    <p>This program is written by </p>
       <div class="text-emph">Michael Harwood</div>
       <div style='padding-bottom:5px;'>It is free for trial purposes,
     but must be licensed for continued use or for use by schools.</div>
-    <p class="mt-3">See the webpage <a href="https://quarkphysics.ca/nomen" target="_blank" class="text-emph">https://nomen.iquark.ca/info</a>
+    <p class="mt-3">See the webpage <a href="https://nomen.iquark.ca/info" target="_blank" class="text-emph">https://nomen.iquark.ca/info</a>
     for licensing and other information.
       </p>
       <p class="mt-3">Contact <a href="nomen@iquark.ca" class="text-emph">'nomen@iquark.ca'</a><br> for more information or to report bugs.</p>

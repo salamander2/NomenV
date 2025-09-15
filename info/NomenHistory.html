@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<HTML>
+
+<HEAD>
+	<meta charset="utf-8">
+	<TITLE>Chemistry Nomenclature Quiz Program</TITLE>
+	<link rel="shortcut icon" href="./resources/pt2.ico" type="image/ico">
+	<link rel="stylesheet" href="./resources/bootstrap.css" type="text/css">
+	<link rel="stylesheet" href="./resources/Nomen.css" type="text/css">
+</HEAD>
+
+<BODY text="#FFFFFF" bgcolor="#001030">
+	<!-- ==================================================================== //-->
+	<!-- Header box //-->
+	<!-- ==================================================================== //-->
+
+	<div id="fixdtop">
+		<img src="./images/icon_pt2.gif" height="32" width="32">&nbsp;&nbsp;&nbsp; Chemistry Nomenclature Quiz Program
+		&nbsp;&nbsp;&nbsp;<img src="./images/icon_pt2.gif" height="32" width="32">
+	</div>
+
+	<p>&nbsp;</p>
+
+	<!-- ==================================================================== //-->
+	<!-- Main Content //-->
+	<!-- ==================================================================== //-->
+	<div id="main">
+
+		<div class="box rounded">
+			<div class="pt-3">
+				<table width="80%" id="tMenu">
+					<tr>
+						<td class="pl-3"> MENU:</td>
+						<td><a href="Nomen.html">Features</a></td>
+						<td><a href="NomenScreen.html">Screenshots</a></td>
+						<td><a href="NomenDoc.html">Documentation</a></td>
+						<td><a href="NomenLicense.html">License</a></td>
+						<td class="selected"><a href="NomenHistory.html">History</a></td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="content">
+				<h1>History</h1>
+
+				<hr color="#55AAAA" size="6">
+				<h2>Acknowledgements</h2>
+				<p>Thanks to Mr. Dennis Trankner who wrote a DOS nomenclature program
+					in 1991 called "CHEMICAL NOMENCLATURE V 4.00", a.k.a. Nomen40.exe.
+					Nomen40 was the inspiration for this program.</p>
+				<p>With his permission, I rewrote this as a Windows program using Visual Basic (v5.0).<br>
+					When Visual Basis was no longer supported, a programmer named Zenista and I rewrote it all in Java
+					in
+					2014.<br>
+					Now in 2025, I have completely rewritten in as a web app using VueJS, Typescript, TailwindCSS, and
+					Pinia.</p>
+			</div>
+			<table border="1" align="center" width="90%" cellpadding="5" cellspacing="0" bgcolor="#FFFFFF">
+				<tr valign="top" bgcolor="#345">
+					<td width="70">
+						<h2 class="orange">Version</h2>
+					</td>
+					<td width="110">
+						<h2 class="orange">Date</h2>
+					</td>
+					<td width="370">
+						<h2 class="orange">Notes</h2>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p style="line-height:2"><a href="https://nomen.iquark.ca">7.0</a><br>JavaScript</p>
+					</td>
+					<td>
+						<p>Aug 2025</p>
+					</td>
+					<td>
+						<p>Completely rewritten in Javascript (Typescript, VueJS, Pinia)</p>
+						<ul>
+							<li>Available online</li>
+							<li>Simple covalent compounds now take electronegativity into account</li>
+							<li>Complex covalent can have alternate names</li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" class="pl-3" style="color:#040; text-align:center">
+						<b>Previous versions can be downloaded below</b>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p style="line-height:2"><a href="nomen6.13.jar">6.13</a><br>Java</p>
+					</td>
+					<td>
+						<p>May 2015</p>
+					</td>
+					<td>
+						<p>Minor fix:</p>
+						<ul>
+							<li>fixed error in manganese and other multivalent cations</li>
+							<li>fixed error in ions.dat (phosphite ion has a -3 charge)</li>
+						</ul>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p style="line-height:2"><a href="nomen6.12.jar">6.12</a><br>Java</p>
+					</td>
+					<td>
+						<p>April 2015</p>
+					</td>
+					<td>
+						<p>Minor fix:</p>
+						<ul>
+							<li>fix bug in printing results</li>
+							<li>there is still an error in some Manganese compounds</li>
+						</ul>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p style="line-height:2"><a href="nomen6.11.jar">6.11</a><br>Java</p>
+					</td>
+					<td>
+						<p>December 2014</p>
+					</td>
+					<td>
+						<p>Program completely rewritten in Java.</p>
+						<ul>
+							<li>subversions 1-10 were attempts to get it working and bug fixes</li>
+
+						</ul>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p style="line-height:2"><a href="Nomen51.zip">5.1</a><br>.exe</p>
+					</td>
+					<td>
+						<p>September 2011</p>
+					</td>
+					<td>
+						<p>NOTE: this probably will not run on Windows 7 or higher. It runs on Windows XP.</p>
+						<p>Minor fixes:</p>
+						<ul>
+							<li>anion display in helpscreen was messy</li>
+						</ul>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p>5.0</p>
+					</td>
+					<td>
+						<p>June 16, 2010</p>
+					</td>
+					<td>
+						<p>Program completely re-written using Visual Basic</p>
+						<ul>
+							<li>added ability to print scores</li>
+						</ul>
+					</td>
+				</tr>
+				<tr valign="top">
+					<td>
+						<p>4.0</p>
+					</td>
+					<td>
+						<p>?</p>
+					</td>
+					<td>
+						<p>Original DOS program by Denis Trankner</p>
+						<ul>
+							<li>Also handles -ous and -ic forms<br> (Classical system)</li>
+							<li>Included in the Nomen5x.zip file</li>
+						</ul>
+					</td>
+				</tr>
+
+			</table>
+			<!-- <p><i><font  size="-1">(The latest version number is shown in the zip filename and in the "About" menu option </font></i></p> -->
+		</div>
+	</div>
+
+	<!-- ==================================================================== //-->
+	<!--  Start footer //-->
+	<!-- ==================================================================== //-->
+	<div id="footer" class="footer">
+		Design &copy; 2012 Harwood.
+	</div>
+	<!-- ==================================================================== //-->
+	<!--  End footer //-->
+	<!-- ==================================================================== //-->
+
+</body>
+
+</html>

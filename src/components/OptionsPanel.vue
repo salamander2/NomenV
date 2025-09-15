@@ -29,9 +29,9 @@ const questionType = [
     ["Simple Covalent", "[covalent-simple]", 128],
     ["Complex Covalent", "[covalent-complex]", 256],
     //type of question
-    ["Names ==> Formulas", "[-]", 512],
-    ["Formulas ==> Names", "[-]", 1024],
-    ["Names <==> Formulas", "[-]", 1536]
+    ["Names ══> Formulas", "[-]", 512],
+    ["Formulas ══> Names", "[-]", 1024],
+    ["Names <══> Formulas", "[-]", 1536]
 ]
 
 

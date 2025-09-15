@@ -60,7 +60,7 @@ const failureText = '<span class="text-lg font-bold text-red-700 uppercase">Inco
     '<span class="text-gray-800 text-base">Check spelling and try again.</span><br>';
 const helpMenuText = computed(() => {
     const iText = ['', 'List of Cations used', 'List of Anions used', 'Help for this specific question'];
-    const cText = ['', 'Help for Covalent Naming', '', ''];
+    const cText = ['', 'Help for Covalent Naming', '--', '--'];
     if (questionStore.question.isCovalent) {
         if (appState.questionOptions & 128) {         //simple covalent
             cText[2] = 'Common oxidation numbers';
@@ -335,14 +335,14 @@ onUnmounted(() => {
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                             <div @click="showHelp(2)"
-                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0']">
+                                :class="[active ? 'bg-blue-200 text-gray-800 outline-none' : 'text-gray-800', 'block px-2 py-0']">
                                 {{ helpMenuText[2] }}
                                 <span class="float-right text-gray-500">F2</span>
                             </div>
                             </MenuItem>
                             <MenuItem v-slot="{ active }">
                             <div @click="showHelp(3)"
-                                :class="[active ? 'bg-gray-200 text-gray-800 outline-none' : 'text-gray-600', 'block px-2 py-0']">
+                                :class="[active ? 'bg-yellow-200 text-gray-800 outline-none' : 'text-gray-800', 'block px-2 py-0']">
                                 {{ helpMenuText[3] }}
                                 <span class="float-right text-gray-500">F3</span>
                             </div>
