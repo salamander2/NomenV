@@ -142,13 +142,11 @@ function fromSubscript(text: string): string {
 //Help for this specific question : F3
 function showHelp(n: number) {
 
-    //FIXME only show help2 for covalent if "simple covalent" is selected
+    //This is handled in HelpPanel.vue
     // if (n == 2 && questionStore.question.isCovalent) return;
 
-    //FIXME only show help3 for covalent if "complex covalent" is selected
     if (n == 3) {  //record that they asked for help
         if (!questionStore.question.isCovalent) isHelpRequested.value = true; //for all ionic questions
-        //FIXME: this will be grayed out and disabled if the question is simple covalent
         if (questionStore.question.isCovalent && !questionStore.question.isSimpleCovalent) isHelpRequested.value = true; //for complex covalent questions
     }
 

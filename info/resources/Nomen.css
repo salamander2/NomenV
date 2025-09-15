@@ -32,7 +32,7 @@ a:hover {
 
 h1 {
     font-family: helvetica, geneva, arial, sans-serif;
-    font-size: 19px;
+    font-size: 130%;
     font-weight: bold;
     color: #003399;
     background-color: transparent;
@@ -44,7 +44,7 @@ h1 {
 
 h2 {
     font-family: helvetica, geneva, arial, sans-serif;
-    font-size: 17px;
+    font-size: 120%;
     font-weight: bold;
     color: #006030;
     background-color: transparent;
@@ -52,7 +52,7 @@ h2 {
 
 h3 {
     font-family: helvetica, geneva, arial, sans-serif;
-    font-size: 14px;
+    font-size: 110%;
     font-weight: bold;
     color: #005000;
     background-color: transparent;

@@ -40,10 +40,12 @@ with Covalent simple, make sure to not get hydrogen hydride H+ H-, sulfur sulfid
 ## Possible Pricing Structure
 
 $10/student / year
-1 class = 25+ students = $250.
-Multi class discount (per school) = each class is $200
+If the class has more than 25 students, then you get a savings: 1 class = 25+ students = $250.
+If the school has 2 or more classes with 20+ students in each, then you get a savings. Multi class discount (per school) = each class is $200
 
-School board discount (min. 3 schools)
+School wide site license = $500  <<< this is too much.
+
+School board discount (min. 3 schools) based on number of schools.
 
 - assume 3 classes per school: licence per school = $600
   x number of schools

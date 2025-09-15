@@ -38,7 +38,7 @@
             <td><a href="NomenScreen.html">Screenshots</a></td>
             <td class="selected"><a href="NomenDoc.html">Documentation</a></td>
             <td><a href="NomenLicense.html">License</a></td>
-            <td><a href="Nomen.html#download">History</a></td>
+            <td><a href="NomenHistory.html">History</a></td>
           </tr>
         </table>
       </div>
@@ -87,10 +87,10 @@
             <li>Ionic: F3 = help for this specific question<br>
               <i>This is quite detailed, so if you require it, it counts against your final score</i>
             </li>
-            <li>Simple Covalent: F1 = help for covalent naming</li>
+            <li style="margin-top: 8px;">Simple Covalent: F1 = help for covalent naming</li>
             <li>Simple Covalent: F2 = list of non-metal oxidation numbers</li>
             <li>Simple Covalent: F3 = <i>not used</i> </li>
-            <li>Complex Covalent: F1 = help for covalent naming</li>
+            <li style="margin-top: 8px;">Complex Covalent: F1 = help for covalent naming</li>
             <li>Complex Covalent: F2 = <i>not used</i> </li>
             <li>Complex Covalent: F3 = list of complex covalent names and formulas<br>
               <i>Since this basically tells you the answer, using it counts against your final score</i>
@@ -112,12 +112,8 @@
         <h1>How it works</h1>
         <p><u>IONS.DAT file</u></p>
         <p>All of the ions and covalent compounds that the nomenclature program
-          uses are read from the file "<b>ions.dat</b>". This file must be in the
-          resources folder.
-          You can edit this file to add/remove/change information. </p>
-        <p>For example, I have put in the spelling sulfur and sulfide with
-          an "F". The program will not recognize sulphur spelled with a
-          PH unless you edit the ions.dat file and change the spelling there.</p>
+          uses are read from the file "<b>ions.dat</b>".
+        </p>
         <p>There are 9 different section headings in the file. <br>
           <b>Each section can have up to 40 ions in it.</b> Any more will be ignored.
           The spelling and format of the headings must be exactly as it
@@ -159,15 +155,39 @@
           <p>methane,CH4</p>
         </blockquote>
 
-        <h3>Question generation:</h3>
-        <p>The program randomly chooses a cation and then randomly chooses
-          an anion. If the cation is multivalent it randomly chooses a charge
-          from the charges listed in ions.dat. <br>
-          When a simple covalent compound is randomly made, the program
-          first checks the complex covalent compounds to make sure that
-          it doesn’t have a special name. If a special name is found, the
-          special name is used. This means that CH4 will be called methane,
-          not carbon tetrahydride.</p>
+        <h2>Question generation:</h2>
+        Ionic Compounds
+        If multiple cation or anion types have been selected, the program first chooses a random type(list) from that
+        which has been selected.
+        The program next randomly chooses a cation and an anion from those lists. If the cation is multivalent it
+        randomly chooses a charge
+        from the charges listed next to it.</p>
+        The name is generated, adding Roman numerals in () if needed.
+        The formula is generated based on the charges and reduced to the lowest common denominator. So Pb+4 and O-2
+        become Pb2O4 which is reduced to PbO2.
+
+        <p>Covalent Compounds</p>
+        To create a simple covalent compound, the program takes two elements at random from the simple covalent list of
+        atoms,
+        setting the least electronegative one as the first atom.
+
+        It then applies some rules, rejecting the choices and finding new atoms in the following situations
+        <ul>
+          <li>the two elements are the same </li>
+          <li>One of the elements has a zero charge (for + or -). This ensures that boron is never the second element.
+          </li>
+          <li>Any compounds with H and C, N, or O. These have special names and go in the complex-covalent section</li>
+          <li>Any compounds with O and S or N. Same thing as above.</li>
+          <li>If the compound is Cl + F, Cl is always Cl<sup>1+</sup></li>
+          <li></li>
+        </ul>
+
+
+        When a simple covalent compound is randomly made, the program
+        first checks the complex covalent compounds to make sure that
+        it doesn’t have a special name. If a special name is found, the
+        special name is used. This means that CH4 will be called methane,
+        not carbon tetrahydride.</p>
         <p>Note: not all compounds actually exist in nature!</p>
         ** Some compounds do not actually exist: e.g. As3+ and C4- give tetraarsenic tricarbide
 
