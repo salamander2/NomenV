@@ -155,8 +155,8 @@
           <p>methane,CH4</p>
         </blockquote>
 
-        <h2>Question generation:</h2>
-        Ionic Compounds
+        <h2>Question Generation</h2>
+        <h3>Ionic Compounds</h3>
         If multiple cation or anion types have been selected, the program first chooses a random type(list) from that
         which has been selected.
         The program next randomly chooses a cation and an anion from those lists. If the cation is multivalent it
@@ -166,30 +166,39 @@
         The formula is generated based on the charges and reduced to the lowest common denominator. So Pb+4 and O-2
         become Pb2O4 which is reduced to PbO2.
 
-        <p>Covalent Compounds</p>
-        To create a simple covalent compound, the program takes two elements at random from the simple covalent list of
+        <h3>Covalent Compounds</h3>
+        To create a <b>simple covalent compound</b>, the program takes two elements at random from the simple covalent
+        list of
         atoms,
         setting the least electronegative one as the first atom.
 
-        It then applies some rules, rejecting the choices and finding new atoms in the following situations
+        <p>It then applies <b>some rules</b>, rejecting the choices and finding new atoms in the following situations
+        </p>
         <ul>
           <li>the two elements are the same </li>
           <li>One of the elements has a zero charge (for + or -). This ensures that boron is never the second element.
           </li>
           <li>Any compounds with H and C, N, or O. These have special names and go in the complex-covalent section</li>
           <li>Any compounds with O and S or N. Same thing as above.</li>
-          <li>If the compound is Cl + F, Cl is always Cl<sup>1+</sup></li>
-          <li></li>
         </ul>
+        <p><b>Other rules:</b></p>
+        <ul>
+          <li>If the compound is Cl + F, Cl is always Cl<sup>1+</sup></li>
+          <li>If there is a halogen and some other element, the halogen is always the second element.</li>
+          <li>If the compound is carbon + something, the formula is reduced to lowest common denominator (eg.
+            C<sup>4+</sup> and O<sup>2-</sup> ==> CO2)</li>
+          <li>The same thing is done for compounds where both elements have an oxidation number of 3. Thus B + N ==> BN.
+          </li>
+          <li>Note that BP and BN have names "boron monophosphide" and "boron mononitride". Typically "mono" is not used
+            for these two compounds.</li>
+        </ul>
+        <p>Note: not all compounds actually exist in nature: e.g. As<sup>3+</sup> and C<sup>4-</sup> give tetraarsenic
+          tricarbide</p>
 
+        <p><b>Covalent compounds</b></p>
+        <p>These compounds have a name, and a formula, and possibly an alternative
+          name<code> dinitrogen monoxide,N2O,nitrous oxide</code> </p>
 
-        When a simple covalent compound is randomly made, the program
-        first checks the complex covalent compounds to make sure that
-        it doesn’t have a special name. If a special name is found, the
-        special name is used. This means that CH4 will be called methane,
-        not carbon tetrahydride.</p>
-        <p>Note: not all compounds actually exist in nature!</p>
-        ** Some compounds do not actually exist: e.g. As3+ and C4- give tetraarsenic tricarbide
 
         <h3>Entering answers</h3>
         <ul style="list-style:square">

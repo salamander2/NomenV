@@ -229,7 +229,7 @@ function generateIonicQuestion(cation: Ion, anion: Ion, answerType: number) {
     if (anion.isPolyAtom && anionCount > 1) anionFormula = "(" + anion.formula + ")";
 
     const formula = cationFormula + (cationCount === 1 ? '' : cationCount) + anionFormula + (anionCount === 1 ? '' : anionCount);
-    console.log("ionic formula: " + formula + " name: " + name);
+    // console.log("ionic formula: " + formula + " name: " + name);
 
     questionStore.setQuestion(name, formula, false, false, cation, anion, answerType);
 }
@@ -256,7 +256,7 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
         //None are polyatomic. Some are still wrong: e.g. BN is boron nitride, not boron mononitride, same as BP
         const formula = cation.formula + (cationCount === 1 ? '' : cationCount) + anion.formula + (anionCount === 1 ? '' : anionCount);
         const name = (cationCount > 1 ? Greek[cationCount] : '') + cation.name + " " + Greek[anionCount] + anion.altName;
-        console.log("covalent formula: " + formula + " name: " + name);
+        // console.log("covalent formula: " + formula + " name: " + name);
         // console.log("formula: " + cation.formula + " name: " + cation.name);
         // console.log("formula: " + anion.formula + " name: " + anion.altName);
 
@@ -265,7 +265,7 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
 
     //Complex covalent question
     if (!isSimpleCovalent) {
-        console.log("formula: " + cation.formula + " name: " + cation.name + " alt name: " + cation.altName);
+        // console.log("formula: " + cation.formula + " name: " + cation.name + " alt name: " + cation.altName);
         questionStore.setQuestion(cation.name, cation.formula, true, isSimpleCovalent, cation, anion, answerType, cation.altName,);
     }
 
