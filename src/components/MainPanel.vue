@@ -18,7 +18,8 @@ const Greek = ['', 'mono', 'di', 'tri', 'tetra', 'penta', 'hexa', 'hepta', 'octa
 const appState = useAppStateStore();
 const ionLists = useIonListsStore();
 const questionStore = useQuestionStore();
-const questionLists = useQuestionListsStore();
+const questionListsStore = useQuestionListsStore();
+const retryCounter = ref(0);
 
 watch(() => appState.state, (newValue: string, oldValue: string) => {
     switch (appState.state) {
@@ -38,7 +39,7 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
         case 'OPTIONS':
             break;
         case 'OPTIONS_COMPLETE':
-            questionLists.$clearQuestions();
+            questionListsStore.$clearQuestions();
             appState.state = 'GENERATE_QUESTION';
             break;
         case 'GENERATE_QUESTION':
@@ -46,8 +47,11 @@ watch(() => appState.state, (newValue: string, oldValue: string) => {
             appState.state = 'QUESTION_GENERATED';
             break;
         case 'QUESTION_GENERATED':
-            appState.state = 'SHOW_QUESTION';
-            // appState.state = 'OPTIONS';  //DEBUG
+            //check for duplicate questions here. If so, go back to generate question.
+            if (duplicateQuestion())
+                appState.state = 'GENERATE_QUESTION';
+            else
+                appState.state = 'SHOW_QUESTION';
             break;
         case 'SHOW_QUESTION':
             break;
@@ -87,13 +91,13 @@ function createQuestion() {
         }
 
         const [cation, anion] = selectCovalentAtoms(isSimpleCovalent);
-        console.log("Generating covalent question...");
+        // console.log("Generating covalent question...");
         generateCovalentQuestion(cation, anion, isSimpleCovalent, answerType);
     }
     //ionic question
     else {
         const [cation, anion] = selectIonicAtoms();
-        console.log("Generating ionic question...");
+        // console.log("Generating ionic question...");
         generateIonicQuestion(cation, anion, answerType);
     }
 }
@@ -144,7 +148,7 @@ function selectIonicAtoms(): [Ion, Ion] {
     cation = ionLists.getRandomIon(cationType[randomCationIndex]);
     anion = ionLists.getRandomIon(anionType[randomAnionIndex]);
 
-    console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
+    // console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
 
     return [cation, anion];
 }
@@ -155,7 +159,7 @@ function selectCovalentAtoms(isSimpleCovalent: boolean): [Ion, Ion] {
     let anion: Ion = ionLists.$getEmptyIon();
 
     if (isSimpleCovalent) {
-        console.log("Generating simple covalent question...");
+        // console.log("Generating simple covalent question...");
         while (true) {
             cation = ionLists.getRandomIon(COVALENT_SIMPLE);
             anion = ionLists.getRandomIon(COVALENT_SIMPLE);
@@ -199,12 +203,12 @@ function selectCovalentAtoms(isSimpleCovalent: boolean): [Ion, Ion] {
             break;
         }
     } else {
-        console.log("Generating complex covalent question...");
+        // console.log("Generating complex covalent question...");
         cation = ionLists.getRandomIon(COVALENT_COMPLEX);
         //anion is empty.
     }
 
-    console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
+    // console.log(`Cation: ${JSON.stringify(cation)}, Anion: ${JSON.stringify(anion)}`);
 
     return [cation, anion];
 }
@@ -268,6 +272,40 @@ function generateCovalentQuestion(cation: Ion, anion: Ion, isSimpleCovalent: boo
         // console.log("formula: " + cation.formula + " name: " + cation.name + " alt name: " + cation.altName);
         questionStore.setQuestion(cation.name, cation.formula, true, isSimpleCovalent, cation, anion, answerType, cation.altName,);
     }
+
+}
+
+function duplicateQuestion() {
+    const questionFormula = questionStore.question.formula;
+    // console.log("Formula generated = " + questionFormula);
+    // Get the lists of correct and wrong answers
+    const questionLists = questionListsStore.getQuestionLists();
+
+    // Check if the formula exists in the correct list
+    const isDuplicate = questionLists.correct.some(
+        (q: { formula: string }) => q.formula === questionFormula
+    );
+
+    const isDuplicateWrong = questionLists.wrong.some(
+        (q: { formula: string }) => q.formula === questionFormula
+    );
+
+
+    if (isDuplicate || isDuplicateWrong) {
+        // console.log("duplicate formula " + questionFormula + " #" + retryCounter.value);
+        retryCounter.value++;
+        if (retryCounter.value > 3) {
+            retryCounter.value = 0;
+            // console.log("accepting duplicate formula");
+            return false;
+        }
+    } else {
+        retryCounter.value = 0;
+    }
+
+
+    return isDuplicate || isDuplicateWrong;
+
 
 }
 

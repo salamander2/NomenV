@@ -7,7 +7,7 @@ import HelpPanel from './HelpPanel.vue';
 import { useAppStateStore } from '@/stores/appState';
 import { useQuestionStore } from '@/stores/question';
 import { useQuestionListsStore } from '@/stores/questionLists';
-import { useIonListsStore } from '@/stores/ionLists';
+// import { useIonListsStore } from '@/stores/ionLists';
 
 // import { defineComponent } from 'vue';
 // import { useStore } from 'vuex';
@@ -18,7 +18,7 @@ const NAME: number = 1;
 const appState = useAppStateStore();
 const questionStore = useQuestionStore();
 const questionListsStore = useQuestionListsStore();
-const ionListsStore = useIonListsStore();
+// const ionListsStore = useIonListsStore();
 
 // const emit = defineEmits(['closePanel']);
 // const closePanel = () => {
