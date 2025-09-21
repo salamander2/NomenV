@@ -110,52 +110,8 @@
         <hr color="#55AAAA" size="6">
 
         <h1>How it works</h1>
-        <p><u>IONS.DAT file</u></p>
-        <p>All of the ions and covalent compounds that the nomenclature program
-          uses are read from the file "<b>ions.dat</b>".
-        </p>
-        <p>There are 9 different section headings in the file. <br>
-          <b>Each section can have up to 40 ions in it.</b> Any more will be ignored.
-          The spelling and format of the headings must be exactly as it
-          is in the ions.dat file. Everything after a heading is considered
-          part of that category until the next heading is reached or the
-          end of the file is reached.
-        </p>
-        <p>For example, everything under [Cations-monovalent] is considered
-          to be a positively charged monovalent ion.</p>
-        <p>Lines beginning with a semi-colon are considered to be comments
-          and are ignored as are blank lines.</p>
-        <p>All lines must have exactly the following format: </p>
-        <p>There are three fields, separated by commas. No spaces or other
-          characters can be anywhere.</p>
-        <ul>
-          <li>The first field is the name of the ion or element. This can
-            be any case as the program will "uppercase" it anyway.</li>
-          <li>The second field is the formula or element symbol. The case
-            must be correct here. Numbers are just typed in in regular case.
-            No parentheses or charges are allowed.</li>
-          <li>The third field is the charge or oxidation number. Do not put
-            in an + or - signs. If there are many possible charges (for positive
-            ions only), then write the numbers in any order, but do not separate
-            them.</li>
-        </ul>
-        <p>Examples of correct formatting (the ions belong in different
-          categories): </p>
-        <blockquote>
-          <p>ammonium,NH4,1</p>
-          <p>carbonate,CO3,2</p>
-          <p>manganese,Mn,76432</p>
-        </blockquote>
+        <p>All data is read from a text file: <a href="ions.dat">ions.dat</a></p>
 
-
-        <p>The [Covalent-complex] section has a special format. There are
-          only two fields: one for the name and the next for the formula.<br>
-          Example of covalent-complex formatting:</p>
-        <blockquote>
-          <p>methane,CH4</p>
-        </blockquote>
-
-        <hr color="#55AAAA" size="6">
 
         <h2>Question Generation</h2>
         <h3>Ionic Compounds</h3>
@@ -172,19 +128,20 @@
         </p>
 
         <h3>Covalent Compounds</h3>
-        To create a <b>simple covalent compound</b>, the program takes two elements at random from the simple covalent
-        list of
-        atoms,
-        setting the least electronegative one as the first atom.
+        <p><b>&rarrc; Simple Covalent Compounds</b></p>
+        To create a <b>simple covalent compound</b>, the program takes two elements at random from
+        the "simple covalent" list of atoms, setting the least electronegative one as the first atom.
 
-        <p>It then applies <b>some rules</b>, rejecting the choices and finding new atoms in the following situations
+        <p>It then applies <b>some rules</b>, rejecting the following choices and finding new atoms in these
+          situations
         </p>
         <ul>
-          <li>the two elements are the same </li>
+          <li>The two elements are the same </li>
           <li>One of the elements has a zero charge (for + or -). This ensures that boron is never the second element.
           </li>
-          <li>Any compounds with H and C, N, or O. These have special names and go in the complex-covalent section</li>
-          <li>Any compounds with O and S or N. Same thing as above.</li>
+          <li>Any compounds with hydrogen and C, N, or O. These have special names and go in the complex-covalent
+            section</li>
+          <li>Any compounds with oxygen and S or N. Same thing as above.</li>
         </ul>
         <p><b>Other rules:</b></p>
         <ul>
@@ -200,12 +157,17 @@
         <p>Note: not all compounds actually exist in nature: e.g. As<sup>3+</sup> and C<sup>4-</sup> give tetraarsenic
           tricarbide</p>
 
-        <p><b>Covalent compounds</b></p>
+        <p><b>&rarrc; Complex Covalent compounds</b></p>
         <p>These compounds have a name, and a formula, and possibly an alternative
-          name<code> dinitrogen monoxide,N2O,nitrous oxide</code><br>
+          name<br><code> dinitrogen monoxide,N2O,nitrous oxide</code><br>
           You can enter either name as the correct answer. </p>
 
         <hr color="#55AAAA" size="6">
+        <h3>Duplicate Questions</h3>
+        <p>In all cases, if the question has already been asked,
+          the program will generate another random question of the same type.
+          It will do this three times before giving up and allowing a question to be duplicated.
+        </p>
 
         <h3>Entering answers</h3>
         <ul style="list-style:square">
@@ -221,7 +183,7 @@
               <li>must have the correct case.
               <li>use ( ) where needed
               <li>numbers will automatically become subscripts
-              <li>example: Ca(NO<sub>3</sub>)<sub>2</sub>
+              <li>example: Ca(NO3)2 &rArr; Ca(NO<sub>3</sub>)<sub>2</sub>
             </ul>
         </ul>
         To check your answer, press &lt;ENTER&gt; or click on the check
@@ -229,30 +191,23 @@
         If you get it wrong, you can fix it and try again.<br>
         If you click "I give up" then the correct answer will be displayed.</p>
         <h3>Score &amp; Printout:</h3>
-        <p>Your score is recorded in the top right corner. <br>
-          After 20 questions, you are asked if you want to print out a list
-          of the questions asked. This is because some teachers may want
-          to mark it. The questions are printed to the default printer on
-          your computer. An answer is only considered wrong if you press
+        <p>
+          The program records the questions asked, as well as which ones you got correct.
+          It then calculates a score for you.
+          After 20 questions (or whenever you press [X]), this summary is displayed.
+          You can print this as a PDF in case your teacher wants it for marks.
+          An answer is only considered wrong if you press
           "I give up".<br>
-          If you have pressed F3 for a question, the program notes "help
-          needed" next to that question.</p>
+          If you have pressed F3 (specific help) for a question, the program notes "help
+          needed" next to that question, and that question is only worth half a mark.</p>
         <h3>Bugs and missing features</h3>
-        <p>*** peroxide formulas are wrong: ***<br>
-          e.g. chromium(VI) peroxide is displayed as CrO23 instead of Cr(O2)3</p>
-        <!-- fix this in Ion/java
-						public Ion(String _name, String _formula, String _charge) {
-						add this:
-						if the ion is O2 then set: isPolyAtom = true;
-				-->
         <p>If you find any bugs please email me at harwood@quarkphysics.ca<br>
-          If you want a feature that I have not included, feel free to contact
-          me. I may add it to the program – depending on whether I am making
-          any money from it or not. <i>(I've only made $150 in the past 5 years!)</i></p>
-        <p></p>
-        <p><i>
-            <font size="-1">This document last updated on Dec 12, 2020</font>
-          </i></p>
+          &bull; If you want a feature that I have not included, feel free to contact
+          me.<br>
+          &bull; Once I start making some money from this, I'll add in common acids.
+        </p>
+
+        <hr color="#55AAAA" size="6">
 
 
       </div>

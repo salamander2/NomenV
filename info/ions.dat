@@ -1,0 +1,174 @@
+; Comments begin with ";" as the first character. Blank lines are also ignored.
+; Section headings are important, particularly exact spelling and location.
+[Cations-monovalent]
+aluminum,Al,3
+ammonium,NH4,1
+barium,Ba,2
+beryllium,Be,2
+boron,B,3
+calcium,Ca,2
+cesium,Cs,1
+lithium,Li,1
+magnesium,Mg,2
+potassium,K,1
+rubidium,Rb,1
+silver,Ag,1
+sodium,Na,1
+strontium,Sr,2
+uranium,U,6
+zinc,Zn,2
+
+[Cations-multivalent]
+;carbon,C,42, ignore C,H,N,O,Si,P,S,Cl,As,Se,Br,Te,I -- they are all covalent
+antimony,Sb,35
+chromium,Cr,63
+cobalt,Co,32
+copper,Cu,21
+gold,Au,13
+iron,Fe,32
+lead,Pb,42
+manganese,Mn,76432
+mercury,Hg,21
+nickel,Ni,23
+platinum,Pt,42
+tin,Sn,42
+tungsten,W,64
+
+[Anions-simple]
+bromide,Br,1
+carbide,C,4
+chloride,Cl,1
+fluoride,F,1
+hydride,H,1
+iodide,I,1
+nitride,N,3
+oxide,O,2
+phosphide,P,3
+selenide,Se,2
+sulfide,S,2
+;skip the metalloids
+
+[Anions-polyatomic]
+borate,BO3,3
+bromate,BrO3,1
+carbonate,CO3,2
+chlorate,ClO3,1
+hydroxide,OH,1
+iodate,IO3,1
+nitrate,NO3,1
+phosphate,PO4,3
+silicate,SiO4,4
+sulfate,SO4,2
+
+[Anions-derivative]
+;not all possibilities exist. These are the most common ones.
+carbonite,CO2,2
+chlorite,ClO2,1
+hypochlorite,ClO,1
+nitrite,NO2,1
+perchlorate,ClO4,1
+peroxide,O2,2
+phosphite,PO3,3
+sulfite,SO3,2
+
+[Anions-hydrogen]
+dihydrogen phosphate,H2PO4,1
+dihydrogen phosphite,H2PO3,1
+hydrogen carbonate,HCO3,1
+hydrogen phosphate,HPO4,2
+hydrogen phosphite,HPO3,2
+hydrogen sulfate,HSO4,1
+hydrogen sulfide,HS,1
+hydrogen sulfite,HSO3,1
+
+[Anions-other]
+acetate,C2H3O2,1
+chromate,CrO4,2
+cyanide,CN,1
+dichromate,Cr2O7,2
+permanganate,MnO4,1
+thiocyanate,SCN,1
+thiosulfate,S2O3,2
+
+;only put the common oxidation numbers here. Put the weird compounds in [Covalent-complex]
+[Covalent-simple]
+; name, symbol, name-ide, positive charges, negative charge, electronegativity.
+; charge of zero means that it is not valid for that type of "ion" (+ or -)
+; oxygen is always last except for OF2, but electronegativity should sort this.
+; Prohibit: boron second, and XX.
+; Silicon is only  with H or O.
+; C and Si need LCM
+; nonhalogen+halogen: halogen comes last: NI3, not I3N
+hydrogen,H,hydride,1,1,2.2
+boron,B,--,3,0,2.04
+carbon,C,carbide,4,4,2.55
+nitrogen,N,nitride,3,3,3.04
+oxygen,O,oxide,2,2,3.44
+fluorine,F,fluoride,0,1,3.98
+
+;silicon,Si,--,4,0,1.9
+phosphorus,P,phosphide,53,3,2.19
+sulfur,S,sulfide,246,2,2.58
+
+chloride,Cl,chloride,1357,1,3.16
+arsenic,As,arsenide,35,3,2.18
+selenium,Se,selenide,46,2,2.55
+bromide,Br,bromide,15,1,2.96
+iodide,I,iodide,157,1,2.66
+
+
+[Covalent-complex]
+;these may have an alternate name
+;note: spelling: Sulfur, fluoride
+;boron nitride,BP,boron mononitride
+;boron phosphide,BP,boron monophosphide
+nitrogen trihydride,NH3,ammonia
+carbon monoxide,CO
+carbon tetrahydride,CH4,methane
+ozone,O3
+dihydrogen monoxide,H2O,water
+;oxygen difluoride,OF2
+silicon tetrahydride,SiH4,silane
+silicon dioxide,SiO2,quartz
+disulfur difluoride,S2F2
+sulfur tetrafluoride,SF4
+disulfur decafluoride,S2F10
+sulfur hexafluoride,SF6
+disulfur dichloride,S2Cl2
+;sulfur dichloride,SCl2
+sulfur tetrachloride,SCl4
+sulfur dioxide,SO2
+sulfur trioxide,SO3
+sulfur monoxide,SO
+sulfur sesquioxide,S2O3
+sulfur tetroxide,SO4
+disulfur heptoxide,S2O7
+nitrogen monoxide,NO,nitric oxide,
+nitrogen dioxide,NO2
+dinitrogen monoxide,N2O,nitrous oxide
+dinitrogen trioxide,N2O3
+dinitrogen tetroxide,N2O4
+dinitrogen pentoxide,N2O5
+dichlorine heptoxide,Cl2O7
+chlorine monofluoride,ClF
+
+[Acids]
+hydrofluoric acid,HF
+hydrochloric acid,HCl
+hydrobromic acid,HBr
+hydroiodic acid,HI
+
+sulfuric acid,H2SO4
+sulfurous acid,H2SO3
+nitric acid,HNO3
+nitrous acid,HNO2
+phosphoric acid,H3PO4
+phosphorous acid,H3PO3
+carbonic acid,H2CO3
+
+acetic acid,HC2H3O2
+
+perchloric acid,HClO4
+chloric acid,HClO3
+chlorous acid,HClO2
+hypochlorous acid,HClO
